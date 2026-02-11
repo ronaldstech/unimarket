@@ -1,53 +1,109 @@
-import { Plus, Heart, ShoppingCart } from 'lucide-react';
+import { Plus, Heart, ShoppingBag, Eye, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useCart } from '../../context/CartContext';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onQuickView }) {
+    const { addToCart } = useCart();
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8 }}
-            className="group relative bg-white rounded-[2rem] border border-black/5 p-4 transition-all duration-500 hover:shadow-premium hover:border-black/10"
+            onClick={() => onQuickView?.(product)}
+            className="group relative flex flex-col bg-white rounded-xl overflow-hidden transition-all duration-500 hover:shadow-premium border border-border/50 cursor-pointer"
         >
-            <div className="relative aspect-[4/5] rounded-[1.5rem] bg-[#f8f8f8] overflow-hidden mb-6">
+            {/* Image Container */}
+            <div className="relative aspect-[4/5] overflow-hidden bg-secondary/30">
                 <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-1000 cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-105"
                 />
 
-                {/* Floating Actions */}
-                <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                    <button className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-sm">
-                        <Heart size={18} className="text-muted-foreground hover:text-red-500 transition-colors" />
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center hover:bg-white transition-colors shadow-sm">
-                        <ShoppingCart size={18} className="text-muted-foreground hover:text-primary transition-colors" />
-                    </button>
+                {/* Overlay with Actions */}
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                    {product.isNew && (
+                        <span className="px-3 py-1 rounded-full bg-white text-[10px] font-black uppercase tracking-widest shadow-soft">
+                            New
+                        </span>
+                    )}
+                    {product.discount && (
+                        <span className="px-3 py-1 rounded-full bg-luxury text-white text-[10px] font-black uppercase tracking-widest shadow-soft">
+                            -{product.discount}%
+                        </span>
+                    )}
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                    <button className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg">
-                        <Plus size={18} /> Quick Add
+                {/* Top Actions */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+                    <button className="w-10 h-10 rounded-full glass-thick flex items-center justify-center bg-white/90 hover:bg-white transition-all shadow-soft group/fav">
+                        <Heart size={18} className="text-foreground/70 group-hover/fav:text-red-500 group-hover/fav:fill-red-500 transition-all" />
+                    </button>
+                    <button
+                        onClick={() => onQuickView?.(product)}
+                        className="w-10 h-10 rounded-full glass-thick flex items-center justify-center bg-white/90 hover:bg-white transition-all shadow-soft opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500"
+                    >
+                        <Eye size={18} className="text-foreground/70 hover:text-primary transition-colors" />
                     </button>
                 </div>
             </div>
 
-            <div className="px-2">
+            {/* Content */}
+            <div className="p-4 flex flex-col gap-1">
                 <div className="flex justify-between items-start mb-2">
-                    <div>
-                        <div className="inline-block px-2 py-1 rounded-md bg-accent/10 border border-accent/20 text-[10px] text-accent font-bold uppercase tracking-widest mb-2">
-                            {product.category}
-                        </div>
-                        <h3 className="font-bold text-xl leading-tight group-hover:text-primary transition-colors line-clamp-1">{product.name}</h3>
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                        {product.category}
+                    </span>
+                    <div className="flex items-center gap-1 text-[9px] font-bold">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span>In Stock</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="font-black text-2xl tracking-tighter">${product.price}</span>
-                    <span className="text-sm text-muted-foreground line-through opacity-50">
-                        ${product.originalPrice ? product.originalPrice.toFixed(0) : (product.price * 1.2).toFixed(0)}
-                    </span>
+
+                {product.school && (
+                    <div className="mb-3">
+                        <span className="px-2.5 py-1 rounded-lg bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10 inline-block">
+                            {product.school}
+                        </span>
+                    </div>
+                )}
+
+                <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors line-clamp-1 tracking-tight mb-2">
+                    {product.name}
+                </h3>
+
+                <div className="flex items-center gap-1.5 mb-1.5">
+                    <div className="flex items-center gap-0.5 text-luxury">
+                        <Star size={10} fill="currentColor" />
+                        <Star size={10} fill="currentColor" />
+                        <Star size={10} fill="currentColor" />
+                        <Star size={10} fill="currentColor" />
+                        <Star size={10} className="opacity-30" />
+                    </div>
+                    <span className="text-[9px] font-black text-muted-foreground/50 tracking-widest">(4.8)</span>
+                </div>
+
+                <div className="flex items-center justify-between mt-auto pt-6 border-t border-border/10">
+                    <div className="flex flex-col">
+                        <span className="font-black text-lg tracking-tighter text-foreground">
+                            MWK {Number(product.price).toLocaleString()}
+                        </span>
+                        <span className="text-[9px] text-muted-foreground line-through opacity-40">
+                            MWK {Number(product.originalPrice || (product.price * 1.2)).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </span>
+                    </div>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            addToCart(product);
+                        }}
+                        className="p-3.5 bg-primary text-primary-foreground hover:bg-black rounded-xl transition-all shadow-premium group/cart active:scale-95"
+                    >
+                        <ShoppingBag size={18} className="transition-transform group-hover/cart:scale-110" />
+                    </button>
                 </div>
             </div>
         </motion.div>
