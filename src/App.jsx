@@ -6,6 +6,7 @@ import Browse from './pages/Browse';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
+import PaymentCallback from './pages/PaymentCallback';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -35,6 +36,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/callback" element={<PaymentCallback />} />
               <Route path="/product/:id" element={<div className="container py-12">Product Details Coming Soon</div>} />
             </Routes>
           </Layout>

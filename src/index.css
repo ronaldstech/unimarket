@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Outfit', sans-serif;
+  --font-sans: 'Ubuntu', system-ui, sans-serif;
+  --font-heading: 'Ubuntu', sans-serif;
 
   /* Refined Luxury Palette */
   --color-primary: hsl(240 10% 4%);
