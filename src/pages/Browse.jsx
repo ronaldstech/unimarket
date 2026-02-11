@@ -53,7 +53,7 @@ export default function Browse() {
     const { products, loading, loadingMore, error, hasMore, loadMore } = useProducts(selectedCategory);
     const { categories: dynamicCategories } = useCategories();
     const [searchQuery, setSearchQuery] = useState("");
-    const [priceRange, setPriceRange] = useState(1000000);
+    const [priceRange, setPriceRange] = useState(100000);
     const [isSortOpen, setIsSortOpen] = useState(false);
     const observerTarget = useRef(null);
 
@@ -334,12 +334,6 @@ export default function Browse() {
                     )}
                 </div>
             </div>
-
-            <QuickViewModal
-                product={quickViewProduct}
-                isOpen={!!quickViewProduct}
-                onClose={() => setQuickViewProduct(null)}
-            />
         </div>
     );
 }
