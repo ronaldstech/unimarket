@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 export default function AuthForm() {
-    const { login, register } = useAuth();
+    const { login, register, loginWithGoogle } = useAuth();
     const [searchParams] = useSearchParams();
     const [isRegistering, setIsRegistering] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ export default function AuthForm() {
                         <Shield size={32} />
                     </div>
                     <h2 className="text-2xl font-black tracking-tighter text-center mb-2 uppercase">
-                        {isRegistering ? "Access Registration" : "Access Protocol"}
+                        {isRegistering ? "Account Registration" : "Welcome Back"}
                     </h2>
                     <p className="text-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-8">
                         {isRegistering ? "Secure Terminal Creation" : "Institutional Verification"}
@@ -184,8 +184,28 @@ export default function AuthForm() {
                             disabled={loading}
                             className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3 mt-8"
                         >
-                            {loading ? "Processing..." : (isRegistering ? "Initialize Account" : "Authenticate")}
+                            {loading ? "Logging In..." : (isRegistering ? "Create Account" : "Login")}
                             {!loading && <ChevronRight size={18} />}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                setLoading(true);
+                                setError("");
+                                try {
+                                    await loginWithGoogle();
+                                } catch (err) {
+                                    setError(err.message);
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#23232a] border border-border py-3 rounded-2xl font-black uppercase tracking-widest text-primary hover:bg-primary/10 transition-all shadow-md mt-4"
+                            disabled={loading}
+                        >
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                            Continue with Google
                         </button>
                     </form>
 
@@ -194,7 +214,7 @@ export default function AuthForm() {
                             onClick={() => setIsRegistering(!isRegistering)}
                             className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
                         >
-                            {isRegistering ? "Already have a terminal ID?" : "Request New Access Protocol"}
+                            {isRegistering ? "Already have an Account?" : "Create Account"}
                         </button>
                     </div>
                 </motion.div>

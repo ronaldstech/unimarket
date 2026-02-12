@@ -10,6 +10,8 @@ import { auth, db } from '../lib/firebase';
 import { collection, query, where, getDocs, updateDoc, increment } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { Shield, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
+import { googleProvider } from '../lib/firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -204,6 +206,42 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const loginWithGoogle = async () => {
+        const loadingToast = toast.loading('Authenticating with Google...', {
+            icon: <Shield size={18} className="text-primary animate-pulse" />
+        });
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            // Optionally, create user doc if new
+            const userRef = doc(db, 'users', result.user.uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    uid: result.user.uid,
+                    email: result.user.email,
+                    firstname: result.user.displayName?.split(' ')[0] || '',
+                    lastname: result.user.displayName?.split(' ')[1] || '',
+                    phone: result.user.phoneNumber || '',
+                    school: '',
+                    createdAt: serverTimestamp(),
+                    myReferralCode: (result.user.displayName?.slice(0, 3).toUpperCase() || 'USER') + Math.floor(1000 + Math.random() * 9000),
+                    points: 0,
+                    base_points: 0
+                });
+            }
+            toast.success('Google Login Successful', {
+                id: loadingToast,
+                icon: <CheckCircle size={18} className="text-emerald-500" />
+            });
+        } catch (error) {
+            toast.error(error.message || 'Google Login Failed', {
+                id: loadingToast,
+                icon: <AlertCircle size={18} className="text-red-500" />
+            });
+            throw error;
+        }
+    };
+
     const value = {
         user,
         isAuthenticated: !!user,
@@ -212,7 +250,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateUserProfile,
         ensureReferralCode,
-        loading
+        loading,
+        loginWithGoogle
     };
 
     return (

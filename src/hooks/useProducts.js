@@ -26,9 +26,12 @@ export function useProducts(selectedCategory = "All") {
             const productsRef = collection(db, "data", "stock", "products");
             let q = query(productsRef, limit(PAGE_SIZE));
 
-            if (selectedCategory !== "All") {
-                console.log("Fetching for selectedCategory:", selectedCategory);
-                q = query(productsRef, where("category", "==", selectedCategory), limit(PAGE_SIZE));
+            // Normalize category for case-insensitive matching
+            const normalizedCategory = selectedCategory && typeof selectedCategory === "string" ? selectedCategory.toLowerCase() : selectedCategory;
+
+            if (normalizedCategory !== "all") {
+                console.log("Fetching for selectedCategory:", normalizedCategory);
+                q = query(productsRef, where("category", "==", normalizedCategory), limit(PAGE_SIZE));
             }
 
             if (!isInitial && lastDocRef.current) {

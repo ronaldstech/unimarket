@@ -22,9 +22,11 @@ import { collection, query, where, orderBy, onSnapshot, doc, updateDoc } from 'f
 import toast from 'react-hot-toast';
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import { useTheme } from '../context/ThemeContext';
 
 export default function Orders() {
     const { user } = useAuth();
+    const { theme } = useTheme();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [verifyingId, setVerifyingId] = useState(null);
@@ -181,14 +183,14 @@ export default function Orders() {
     }
 
     return (
-        <div className="min-h-screen bg-[#fafafa] pt-24 pb-12 px-4 md:px-8 lg:px-12 relative overflow-hidden">
-            <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className={`min-h-screen pt-24 pb-12 px-4 md:px-8 lg:px-12 relative overflow-hidden ${theme === 'dark' ? 'bg-[#18181b] text-white' : 'bg-[#fafafa] text-black'}`}>
+            <div className={`absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none ${theme === 'dark' ? 'bg-primary/10' : 'bg-primary/5'}`} />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 <header className="mb-10">
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
                         <Link to="/profile" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all mb-6 group">
-                            <div className="p-1.5 rounded-full bg-white shadow-sm group-hover:shadow-md transition-all">
+                            <div className={`p-1.5 rounded-full shadow-sm group-hover:shadow-md transition-all ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-white'}`}> 
                                 <ArrowLeft size={12} />
                             </div>
                             Terminal Profile
@@ -260,8 +262,8 @@ export default function Orders() {
                                     {/* Items Preview */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
                                         {order.items?.map((item, i) => (
-                                            <div key={i} className="flex gap-3 p-3 rounded-xl bg-secondary/20 border border-border/5">
-                                                <div className="w-12 h-12 rounded-lg overflow-hidden bg-white shrink-0">
+                                            <div key={i} className={`flex gap-3 p-3 rounded-xl border border-border/5 ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-secondary/20'}`}> 
+                                                <div className={`w-12 h-12 rounded-lg overflow-hidden shrink-0 ${theme === 'dark' ? 'bg-[#18181b]' : 'bg-white'}`}> 
                                                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div className="min-w-0 flex flex-col justify-center">
@@ -330,6 +332,7 @@ export default function Orders() {
 
 {/* Hidden Receipt Templates */ }
 function ReceiptTemplates({ orders, formatDate, formatCurrency }) {
+    const { theme } = useTheme();
     return (
         <div className="fixed top-[-9999px] left-[-9999px]">
             {orders.map(order => (
@@ -341,8 +344,8 @@ function ReceiptTemplates({ orders, formatDate, formatCurrency }) {
                         width: '210mm',
                         minHeight: '297mm',
                         padding: '64px 64px 80px 64px', // Added bottom padding to ensure footer space
-                        backgroundColor: '#ffffff',
-                        color: '#000000',
+                        backgroundColor: theme === 'dark' ? '#18181b' : '#ffffff',
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
                         fontFamily: 'sans-serif',
                         display: 'flex',
                         flexDirection: 'column',
@@ -352,7 +355,7 @@ function ReceiptTemplates({ orders, formatDate, formatCurrency }) {
                     {/* Structural: Top Border */}
                     <div
                         className="absolute top-0 left-0 right-0"
-                        style={{ height: '12px', backgroundColor: '#000000' }}
+                        style={{ height: '12px', backgroundColor: theme === 'dark' ? '#ffffff' : '#000000' }}
                     />
 
                     {/* Section 1: Header */}
