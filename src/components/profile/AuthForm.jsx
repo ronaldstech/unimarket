@@ -17,7 +17,7 @@ export default function AuthForm() {
         firstname: '',
         lastname: '',
         phone: '',
-        school: 'MUBAS',
+        school: 'mubas',
         referralCode: ''
     });
 
@@ -126,9 +126,9 @@ export default function AuthForm() {
                                             onChange={handleChange}
                                             className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 focus:bg-card focus:border-border transition-all font-bold text-sm appearance-none text-foreground"
                                         >
-                                            <option value="MUBAS" className="bg-card">MUBAS</option>
-                                            <option value="UNIMA" className="bg-card">UNIMA</option>
-                                            <option value="LUANAR" className="bg-card">LUANAR</option>
+                                            <option value="mubas" className="bg-card">MUBAS</option>
+                                            <option value="unima" className="bg-card">UNIMA</option>
+                                            <option value="luanar" className="bg-card">LUANAR</option>
                                         </select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 dark:text-foreground">
                                             <ChevronRight size={16} className="rotate-90" />

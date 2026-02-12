@@ -22,14 +22,26 @@ export default function Layout({ children }) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = useMemo(() => [
-        { name: 'Home', path: '/', icon: HomeIcon },
-        { name: 'Collections', path: '/browse', icon: LayoutGrid, hasDropdown: true },
-        { name: 'Cart', path: '/cart', icon: ShoppingBag, isCart: true },
-        ...(isAuthenticated ? [{ name: 'Orders', path: '/orders', icon: Package }] : []),
-        { name: 'Profile', path: '/profile', icon: User },
-        { name: 'About', path: '#', icon: Info },
-    ], [isAuthenticated, cartCount]);
+    const navLinks = useMemo(() => {
+        const baseLinks = [
+            { name: 'Home', path: '/', icon: HomeIcon },
+            { name: 'Collections', path: '/browse', icon: LayoutGrid, hasDropdown: true },
+            { name: 'Cart', path: '/cart', icon: ShoppingBag, isCart: true },
+            ...(isAuthenticated ? [{ name: 'Orders', path: '/orders', icon: Package }] : []),
+            { name: 'Profile', path: '/profile', icon: User },
+            { name: 'About', path: '#', icon: Info },
+        ];
+        if (isAuthenticated && user?.role === 'admin') {
+            // Add admin-only links
+            baseLinks.splice(1, 0, // after Home
+                { name: 'Users', path: '/admin/users', icon: User },
+                { name: 'Products', path: '/admin/products', icon: LayoutGrid },
+                { name: 'Categories', path: '/admin/categories', icon: Package },
+                { name: 'Redemptions', path: '/admin/redemptions', icon: CreditCard }
+            );
+        }
+        return baseLinks;
+    }, [isAuthenticated, cartCount, user]);
 
     return (
         <div className="min-h-screen flex flex-col bg-background selection:bg-primary selection:text-primary-foreground font-sans text-sm antialiased text-foreground">

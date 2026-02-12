@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
                 school,
                 createdAt: serverTimestamp(),
                 myReferralCode: (firstname || 'USER').slice(0, 3).toUpperCase() + Math.floor(1000 + Math.random() * 9000),
-                points: 0,
+                points: 10,
                 base_points: 0, // Fallback
                 ...(cleanReferralCode && { referredBy: cleanReferralCode })
             };
