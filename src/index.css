@@ -4,11 +4,11 @@
   --font-sans: 'Ubuntu', system-ui, sans-serif;
   --font-heading: 'Ubuntu', sans-serif;
 
-  /* Refined Luxury Palette */
+  /* Refined Luxury Palette - Light Mode */
   --color-primary: hsl(240 10% 4%);
   --color-primary-foreground: hsl(0 0% 98%);
 
-  --color-secondary: hsl(240 5% 96%);
+  --color-secondary: hsl(240 5% 94%);
   --color-secondary-foreground: hsl(240 10% 4%);
 
   --color-accent: hsl(240 6% 10%);
@@ -26,13 +26,36 @@
   --color-card: hsl(0 0% 100%);
   --color-card-foreground: hsl(240 10% 4%);
 
-  --color-border: hsl(240 6% 90%);
+  --color-border: hsl(240 6% 88%);
   --color-input: hsl(240 6% 90%);
   --color-ring: hsl(240 10% 4%);
 
   --radius-premium: 1.5rem;
   --radius-xl: 2rem;
   --radius-2xl: 3rem;
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-background: hsl(240 10% 2%);
+  --color-foreground: hsl(0 0% 98%);
+
+  --color-primary: hsl(0 0% 98%);
+  --color-primary-foreground: hsl(240 10% 4%);
+
+  --color-secondary: hsl(240 6% 10%);
+  --color-secondary-foreground: hsl(0 0% 98%);
+
+  --color-card: hsl(240 10% 4%);
+  --color-card-foreground: hsl(0 0% 98%);
+
+  --color-muted: hsl(240 6% 8%);
+  --color-muted-foreground: hsl(240 4% 60%);
+
+  --color-border: hsl(240 6% 15%);
+  --color-input: hsl(240 6% 15%);
+  --color-ring: hsl(0 0% 98%);
 }
 
 @layer base {
@@ -79,23 +102,34 @@
   /* Advanced Glassmorphism */
   .glass-light {
     background: rgba(255, 255, 255, 0.4);
+
+    .dark & {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-  }
 
-  .glass-dark {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    .dark & {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
   }
 
   .glass-thick {
     background: rgba(255, 255, 255, 0.8);
+
+    .dark & {
+      background: rgba(0, 0, 0, 0.85);
+    }
+
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .dark & {
+      border-color: rgba(255, 255, 255, 0.05);
+    }
   }
 
   /* Shimmer Effect */
@@ -124,6 +158,13 @@
       radial-gradient(at 0% 0%, hsla(240, 10%, 95%, 1) 0, transparent 50%),
       radial-gradient(at 50% 0%, hsla(35, 60%, 95%, 1) 0, transparent 50%),
       radial-gradient(at 100% 0%, hsla(220, 30%, 95%, 1) 0, transparent 50%);
+
+    .dark & {
+      background-image:
+        radial-gradient(at 0% 0%, hsla(240, 10%, 5%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(35, 60%, 5%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(220, 30%, 5%, 1) 0, transparent 50%);
+    }
   }
 
   /* Shadow Systems */

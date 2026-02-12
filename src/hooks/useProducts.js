@@ -27,6 +27,7 @@ export function useProducts(selectedCategory = "All") {
             let q = query(productsRef, limit(PAGE_SIZE));
 
             if (selectedCategory !== "All") {
+                console.log("Fetching for selectedCategory:", selectedCategory);
                 q = query(productsRef, where("category", "==", selectedCategory), limit(PAGE_SIZE));
             }
 
@@ -41,6 +42,7 @@ export function useProducts(selectedCategory = "All") {
             } else {
                 const fetchedProducts = querySnapshot.docs.map(doc => {
                     const data = doc.data();
+                    console.log(`Product ID: ${doc.id}, DB Category: "${data.category}"`);
                     return {
                         id: doc.id,
                         name: data.title || "Untitled Product",

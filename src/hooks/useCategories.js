@@ -20,6 +20,7 @@ export function useCategories() {
                         id: doc.id,
                         ...doc.data()
                     }));
+                    console.log("Fetched categories from Firestore:", fetchedCategories);
                     setCategories(fetchedCategories);
                 } else {
                     // Fallback to derive from products or use defaults if collection empty

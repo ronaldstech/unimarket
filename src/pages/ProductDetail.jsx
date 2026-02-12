@@ -39,7 +39,17 @@ export default function ProductDetail() {
             try {
                 const productDoc = await getDoc(doc(db, 'data', 'stock', 'products', id));
                 if (productDoc.exists()) {
-                    setProduct({ id: productDoc.id, ...productDoc.data() });
+                    const data = productDoc.data();
+                    setProduct({
+                        id: productDoc.id,
+                        ...data,
+                        name: data.title || "Untitled Product",
+                        price: parseFloat(data.price) || 0,
+                        originalPrice: parseFloat(data.actualPrice) || 0,
+                        image: data.images && data.images.length > 0
+                            ? data.images[0]
+                            : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80"
+                    });
 
                     // Track referral if present and different from current user
                     if (referralCode && user?.myReferralCode !== referralCode) {
@@ -64,7 +74,6 @@ export default function ProductDetail() {
     const handleAddToCart = () => {
         if (product) {
             addToCart(product);
-            toast.success('Added to cart!');
         }
     };
 
@@ -126,22 +135,22 @@ export default function ProductDetail() {
                 <meta name="twitter:image" content={product.image?.startsWith('http') ? product.image : `${window.location.origin}${product.image}`} />
             </Helmet>
 
-            <div className="min-h-screen bg-[#fafafa]">
+            <div className="min-h-screen bg-background transition-colors duration-500">
                 {/* Header */}
                 <div className="container pt-24 pb-8 px-6">
                     <button
                         onClick={() => navigate('/browse')}
                         className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all mb-6 group"
                     >
-                        <div className="p-1.5 rounded-full bg-white shadow-sm group-hover:shadow-md transition-all">
-                            <ArrowLeft size={12} />
+                        <div className="p-1.5 rounded-full bg-card shadow-soft group-hover:shadow-md transition-all border border-border/10">
+                            <ArrowLeft size={12} className="text-foreground" />
                         </div>
-                        Back to Browse
+                        <span className="text-foreground/60 group-hover:text-primary">Back to Browse</span>
                     </button>
 
                     {referralCode && (
-                        <div className="mb-6 p-4 bg-primary/5 border border-primary/10 rounded-2xl">
-                            <p className="text-xs font-bold text-primary">
+                        <div className="mb-6 p-4 bg-primary/5 dark:bg-luxury/5 border border-primary/10 dark:border-luxury/10 rounded-2xl">
+                            <p className="text-xs font-bold text-primary dark:text-luxury">
                                 🎁 Shared by a friend • Referral Code: {referralCode}
                             </p>
                         </div>
@@ -158,7 +167,7 @@ export default function ProductDetail() {
                                 animate={{ opacity: 1, x: 0 }}
                                 className="relative"
                             >
-                                <div className="aspect-[4/5] bg-secondary/20 rounded-[3rem] overflow-hidden relative group">
+                                <div className="aspect-[4/5] bg-secondary/20 rounded-[3rem] overflow-hidden relative group border border-border/10">
                                     <img
                                         src={product.image}
                                         alt={product.name}
@@ -168,11 +177,11 @@ export default function ProductDetail() {
                                     {/* Badges */}
                                     <div className="absolute top-8 left-8 flex flex-col gap-2">
                                         {product.isNew && (
-                                            <span className="bg-black text-white text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full backdrop-blur-md">
+                                            <span className="bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full backdrop-blur-md">
                                                 Edition 01 / New
                                             </span>
                                         )}
-                                        <span className="bg-white/90 backdrop-blur-md text-black text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-black/5 shadow-xl">
+                                        <span className="bg-card backdrop-blur-md text-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-border/20 shadow-xl">
                                             {product.category}
                                         </span>
                                     </div>
@@ -195,27 +204,34 @@ export default function ProductDetail() {
                                         </span>
                                     </div>
 
-                                    <h1 className="text-5xl lg:text-6xl font-black tracking-tightest uppercase leading-[0.85] mb-6">
+                                    <h1 className="text-5xl lg:text-6xl font-black tracking-tightest uppercase leading-[0.85] mb-6 text-foreground">
                                         {product.name?.split(' ').map((word, i) => (
-                                            <span key={i} className={i === 1 ? 'text-primary italic' : ''}>
+                                            <span key={i} className={i === 1 ? 'text-primary dark:text-luxury italic' : ''}>
                                                 {word}{' '}
                                             </span>
                                         ))}
                                     </h1>
 
                                     <div className="flex items-center gap-6 mb-8">
-                                        <div className="text-4xl font-black tracking-tighter tabular-nums">
-                                            {Number(product.price).toLocaleString()}
-                                            <span className="text-xs ml-2 text-muted-foreground font-bold">MWK</span>
+                                        <div className="flex items-baseline gap-4">
+                                            <div className="text-4xl font-black tracking-tighter tabular-nums text-foreground">
+                                                {Number(product.price).toLocaleString()}
+                                                <span className="text-xs ml-2 text-muted-foreground font-bold">MWK</span>
+                                            </div>
+                                            {product.originalPrice > product.price && (
+                                                <span className="text-lg text-muted-foreground line-through opacity-40 font-bold tabular-nums">
+                                                    MWK {Number(product.originalPrice).toLocaleString()}
+                                                </span>
+                                            )}
                                         </div>
-                                        <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-lg border border-emerald-100">
+                                        <div className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase rounded-lg border border-emerald-500/20">
                                             In Stock
                                         </div>
                                     </div>
 
                                     {product.school && (
                                         <div className="mb-6">
-                                            <span className="text-xs font-black text-primary uppercase tracking-[0.3em]">
+                                            <span className="text-xs font-black text-primary dark:text-luxury uppercase tracking-[0.3em]">
                                                 {product.school}
                                             </span>
                                         </div>
@@ -229,7 +245,7 @@ export default function ProductDetail() {
                                     </p>
 
                                     {/* Color Options */}
-                                    <div className="flex items-center justify-between p-6 rounded-3xl bg-secondary/30 border border-black/[0.03]">
+                                    <div className="flex items-center justify-between p-6 rounded-3xl bg-secondary/50 dark:bg-card border border-border/10">
                                         <div>
                                             <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
                                                 Color Variant
@@ -239,14 +255,14 @@ export default function ProductDetail() {
                                                     <button
                                                         key={i}
                                                         onClick={() => setActiveFinish(i)}
-                                                        className={`w-8 h-8 rounded-full border-4 transition-all ${activeFinish === i ? 'border-primary scale-110' : 'border-transparent scale-100'
+                                                        className={`w-8 h-8 rounded-full border-4 transition-all ${activeFinish === i ? 'border-primary dark:border-luxury scale-110' : 'border-transparent scale-100'
                                                             }`}
                                                         style={{ backgroundColor: color }}
                                                     />
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="text-right">
+                                        <div className="text-right text-foreground">
                                             <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
                                                 Material
                                             </h4>
@@ -259,12 +275,12 @@ export default function ProductDetail() {
                                         <div className="flex gap-3">
                                             <button
                                                 onClick={handleAddToCart}
-                                                className="flex-[4] bg-black text-white py-6 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-primary transition-all active:scale-[0.98] shadow-2xl shadow-black/10"
+                                                className="flex-[4] bg-primary text-primary-foreground py-6 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:opacity-90 transition-all active:scale-[0.98] shadow-2xl shadow-primary/10"
                                             >
                                                 <ShoppingBag size={18} />
-                                                Add to Cart
+                                                Add to Collection
                                             </button>
-                                            <button className="flex-1 bg-secondary rounded-2xl flex items-center justify-center hover:bg-white border border-transparent hover:border-black/5 transition-all">
+                                            <button className="flex-1 bg-card rounded-2xl flex items-center justify-center hover:bg-secondary border border-border/10 transition-all text-foreground">
                                                 <Heart size={20} />
                                             </button>
                                         </div>
@@ -272,14 +288,14 @@ export default function ProductDetail() {
                                         <div className="grid grid-cols-2 gap-3">
                                             <button
                                                 onClick={handleShare}
-                                                className="py-4 bg-white border border-black/5 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-secondary transition-all group"
+                                                className="py-4 bg-card border border-border/10 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-secondary transition-all group text-foreground"
                                             >
                                                 <Share2 size={14} className="group-hover:rotate-12 transition-transform" />
                                                 Share
                                             </button>
                                             <button
                                                 onClick={handleCopyLink}
-                                                className="py-4 bg-white border border-black/5 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-secondary transition-all"
+                                                className="py-4 bg-card border border-border/10 rounded-2xl flex items-center justify-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-secondary transition-all text-foreground"
                                             >
                                                 {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
                                                 {copied ? 'Copied' : 'Copy Link'}
@@ -288,18 +304,18 @@ export default function ProductDetail() {
                                     </div>
 
                                     {/* Trust Metrics */}
-                                    <div className="grid grid-cols-2 gap-8 pt-8 border-t border-black/5">
+                                    <div className="grid grid-cols-2 gap-8 pt-8 border-t border-border/10">
                                         <div className="flex items-center gap-4">
-                                            <ShieldCheck size={20} className="text-primary/40" />
+                                            <ShieldCheck size={20} className="text-primary/40 dark:text-luxury/40" />
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest">Secured</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-foreground">Secured</p>
                                                 <p className="text-[10px] font-bold text-muted-foreground">Lifetime Warranty</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <Zap size={20} className="text-primary/40" />
+                                            <Zap size={20} className="text-primary/40 dark:text-luxury/40" />
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest">Rapid</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-foreground">Rapid</p>
                                                 <p className="text-[10px] font-bold text-muted-foreground">Malawi Express</p>
                                             </div>
                                         </div>

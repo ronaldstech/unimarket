@@ -77,7 +77,7 @@ export default function AuthForm() {
 
                     <form onSubmit={handleAuth} className="space-y-4">
                         {error && (
-                            <div className="bg-red-50 text-red-500 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-center mb-4">
+                            <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-center mb-4 border border-red-500/20">
                                 {error}
                             </div>
                         )}
@@ -92,7 +92,7 @@ export default function AuthForm() {
                                             required
                                             value={formData.firstname}
                                             onChange={handleChange}
-                                            className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 focus:bg-white focus:border-border transition-all font-bold text-sm"
+                                            className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function AuthForm() {
                                             required
                                             value={formData.lastname}
                                             onChange={handleChange}
-                                            className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 focus:bg-white focus:border-border transition-all font-bold text-sm"
+                                            className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
                                         />
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@ export default function AuthForm() {
                                         required
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 focus:bg-white focus:border-border transition-all font-bold text-sm"
+                                        className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -124,13 +124,13 @@ export default function AuthForm() {
                                             required
                                             value={formData.school}
                                             onChange={handleChange}
-                                            className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 focus:bg-white focus:border-border transition-all font-bold text-sm appearance-none"
+                                            className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 focus:bg-card focus:border-border transition-all font-bold text-sm appearance-none text-foreground"
                                         >
-                                            <option value="MUBAS">MUBAS</option>
-                                            <option value="UNIMA">UNIMA</option>
-                                            <option value="LUANAR">LUANAR</option>
+                                            <option value="MUBAS" className="bg-card">MUBAS</option>
+                                            <option value="UNIMA" className="bg-card">UNIMA</option>
+                                            <option value="LUANAR" className="bg-card">LUANAR</option>
                                         </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 dark:text-foreground">
                                             <ChevronRight size={16} className="rotate-90" />
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@ export default function AuthForm() {
                                         value={formData.referralCode}
                                         onChange={handleChange}
                                         placeholder="Enter Code"
-                                        className="w-full bg-luxury/5 border border-luxury/20 rounded-2xl py-4 px-6 focus:bg-white focus:border-luxury transition-all font-bold text-sm text-luxury-dark placeholder:text-luxury/30"
+                                        className="w-full bg-luxury/5 border border-luxury/20 rounded-2xl py-4 px-6 focus:bg-card focus:border-luxury transition-all font-bold text-sm text-luxury-dark dark:text-luxury placeholder:text-luxury/30"
                                     />
                                 </div>
                             </>
@@ -157,7 +157,7 @@ export default function AuthForm() {
                                     required
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 pl-12 focus:bg-white focus:border-border transition-all font-bold text-sm"
+                                    className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 pl-12 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
                                     placeholder="user@unimarket.com"
                                 />
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/20" size={18} />
@@ -173,7 +173,7 @@ export default function AuthForm() {
                                     required
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className="w-full bg-secondary/30 border border-transparent rounded-2xl py-4 px-6 pl-12 focus:bg-white focus:border-border transition-all font-bold text-sm"
+                                    className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 pl-12 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
                                     placeholder="••••••••"
                                 />
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/20" size={18} />

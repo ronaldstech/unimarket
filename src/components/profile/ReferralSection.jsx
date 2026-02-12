@@ -173,17 +173,17 @@ export default function ReferralSection() {
             {/* Redemption Modal */}
             <AnimatePresence>
                 {isRedeeming && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
-                            className="bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-2xl relative"
+                            className="bg-card rounded-[2rem] p-8 max-w-sm w-full shadow-premium border border-border/20 relative"
                         >
                             <button
                                 onClick={() => setIsRedeeming(false)}
                                 disabled={isProcessing}
-                                className="absolute top-4 right-4 p-2 bg-secondary rounded-full hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50"
+                                className="absolute top-4 right-4 p-2 bg-muted rounded-full hover:bg-red-500/10 hover:text-red-500 transition-colors disabled:opacity-50"
                             >
                                 <X size={20} />
                             </button>
@@ -192,15 +192,15 @@ export default function ReferralSection() {
                                 <div className="w-16 h-16 bg-luxury/10 text-luxury rounded-2xl flex items-center justify-center mx-auto mb-4">
                                     <Calculator size={32} />
                                 </div>
-                                <h3 className="text-xl font-black uppercase tracking-tight">Redeem Airtime</h3>
+                                <h3 className="text-xl font-black uppercase tracking-tight text-foreground">Redeem Airtime</h3>
                                 <p className="text-xs text-muted-foreground font-medium mt-1">Convert your points to airtime</p>
                             </div>
 
                             <div className="space-y-6">
-                                <div className="bg-secondary/50 p-6 rounded-2xl text-center space-y-1">
+                                <div className="bg-muted p-6 rounded-2xl text-center space-y-1">
                                     <div className="text-xs font-black uppercase tracking-widest text-muted-foreground">You Receive</div>
                                     <div className="text-4xl font-black text-luxury tracking-tighter">MWK {airtimeValue}</div>
-                                    <div className="text-[10px] font-bold text-emerald-500 bg-emerald-50 inline-block px-2 py-1 rounded-full">For {redeemPoints} PTS</div>
+                                    <div className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 inline-block px-2 py-1 rounded-full border border-emerald-500/20">For {redeemPoints} PTS</div>
                                 </div>
 
                                 {/* Phone Number Input */}
@@ -212,7 +212,7 @@ export default function ReferralSection() {
                                             value={phoneNumber}
                                             onChange={(e) => setPhoneNumber(e.target.value)}
                                             placeholder="0990944406"
-                                            className="w-full bg-secondary/30 border border-border/20 rounded-xl px-4 py-3 pl-10 text-sm font-bold focus:ring-2 ring-luxury/10 outline-none"
+                                            className="w-full bg-muted border border-border/20 rounded-xl px-4 py-3 pl-10 text-sm font-bold focus:ring-2 ring-luxury/10 outline-none text-foreground"
                                             disabled={isProcessing}
                                         />
                                         <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -221,7 +221,7 @@ export default function ReferralSection() {
 
                                 {/* Points Slider */}
                                 <div className="space-y-2">
-                                    <div className="flex justify-between text-xs font-bold px-1">
+                                    <div className="flex justify-between text-xs font-bold px-1 text-muted-foreground">
                                         <span>50 PTS</span>
                                         <span>{maxPoints} PTS</span>
                                     </div>
@@ -232,7 +232,7 @@ export default function ReferralSection() {
                                         step="10"
                                         value={redeemPoints}
                                         onChange={(e) => setRedeemPoints(parseInt(e.target.value))}
-                                        className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-luxury"
+                                        className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-luxury"
                                         disabled={isProcessing}
                                     />
                                 </div>
@@ -240,7 +240,7 @@ export default function ReferralSection() {
                                 <button
                                     onClick={confirmRedemption}
                                     disabled={isProcessing}
-                                    className="w-full bg-luxury text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-luxury/90 transition-colors shadow-lg shadow-luxury/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full bg-luxury text-white py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-luxury/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isProcessing ? 'Processing...' : 'Confirm Redemption'}
                                 </button>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCategories } from '../../hooks/useCategories';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Layout({ children }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,18 +35,20 @@ export default function Layout({ children }) {
         <div className="min-h-screen flex flex-col bg-background selection:bg-primary selection:text-primary-foreground font-sans text-sm antialiased text-foreground">
             {/* Ambient Background Lights */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-luxury/5 rounded-full blur-[120px] opacity-40 mix-blend-multiply animate-pulse" />
-                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] opacity-40 mix-blend-multiply animate-pulse" />
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-luxury/5 dark:bg-luxury/10 rounded-full blur-[120px] opacity-40 dark:opacity-20 mix-blend-multiply dark:mix-blend-lighten animate-pulse" />
+                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-primary/10 rounded-full blur-[120px] opacity-40 dark:opacity-20 mix-blend-multiply dark:mix-blend-lighten animate-pulse" />
             </div>
 
+            <ThemeToggle />
+
             {/* Desktop Sidebar */}
-            <aside className="fixed top-0 left-0 bottom-0 w-72 h-full glass-thick border-r border-border/50 hidden lg:flex flex-col z-50">
+            <aside className="fixed top-0 left-0 bottom-0 w-72 h-full glass-thick border-r border-border/10 hidden lg:flex flex-col z-50">
                 <div className="p-10 border-b border-border/10">
                     <Link to="/" className="flex items-center gap-4 group">
-                        <div className="w-10 h-10 bg-white ring-1 ring-border/50 flex items-center justify-center rounded-2xl shadow-soft group-hover:scale-110 transition-transform duration-500 overflow-hidden">
+                        <div className="w-10 h-10 bg-white dark:bg-black ring-1 ring-border/50 flex items-center justify-center rounded-2xl shadow-soft group-hover:scale-110 transition-transform duration-500 overflow-hidden">
                             <img src="/logo.png" alt="Unimarket Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="font-black tracking-tighter text-xl leading-none">UNIMARKET</span>
+                        <span className="font-black tracking-tighter text-xl leading-none text-foreground uppercase">UNIMARKET</span>
                     </Link>
                 </div>
 
@@ -158,14 +161,14 @@ export default function Layout({ children }) {
                             animate={{ x: 0 }}
                             exit={{ x: "-100%" }}
                             transition={{ type: "spring", damping: 30, stiffness: 200 }}
-                            className="fixed top-0 left-0 bottom-0 w-[300px] z-[61] bg-white p-10 lg:hidden flex flex-col gap-12"
+                            className="fixed top-0 left-0 bottom-0 w-[300px] z-[61] bg-card p-10 lg:hidden flex flex-col gap-12 border-r border-border/20"
                         >
                             <div className="flex items-center justify-between">
                                 <Link to="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
-                                    <div className="w-8 h-8 bg-white ring-1 ring-border/50 flex items-center justify-center rounded-xl overflow-hidden">
+                                    <div className="w-8 h-8 bg-white dark:bg-black ring-1 ring-border/50 flex items-center justify-center rounded-xl overflow-hidden">
                                         <img src="/logo.png" alt="Unimarket Logo" className="w-full h-full object-cover" />
                                     </div>
-                                    <span className="font-black tracking-tighter text-lg uppercase">UNIMARKET</span>
+                                    <span className="font-black tracking-tighter text-lg uppercase text-foreground">UNIMARKET</span>
                                 </Link>
                                 <button onClick={() => setIsMenuOpen(false)} className="p-2 hover:bg-secondary rounded-xl">
                                     <X size={20} />
@@ -221,7 +224,7 @@ export default function Layout({ children }) {
 
             {/* Refined Footer - Only visible on Home Page */}
             {location.pathname === '/home' && (
-                <footer className="border-t border-border/30 bg-white lg:ml-72 transition-all duration-500">
+                <footer className="border-t border-border/30 bg-card lg:ml-72 transition-all duration-500">
                     {/* Meta Bar */}
                     <div className="border-b border-border/10 py-3">
                         <div className="container px-8 flex items-center justify-between text-[10px] font-black tracking-[0.2em] text-muted-foreground">
@@ -241,10 +244,10 @@ export default function Layout({ children }) {
                             {/* Brand Cluster */}
                             <div className="md:col-span-5">
                                 <Link to="/home" className="flex items-center gap-3 mb-8">
-                                    <div className="w-8 h-8 bg-white ring-1 ring-border/50 flex items-center justify-center rounded-xl overflow-hidden">
+                                    <div className="w-8 h-8 bg-white dark:bg-black ring-1 ring-border/50 flex items-center justify-center rounded-xl overflow-hidden">
                                         <img src="/logo.png" alt="Unimarket Logo" className="w-full h-full object-cover" />
                                     </div>
-                                    <span className="font-black tracking-tighter text-xl">UNIMARKET</span>
+                                    <span className="font-black tracking-tighter text-xl text-foreground">UNIMARKET</span>
                                 </Link>
                                 <p className="text-muted-foreground text-lg leading-relaxed mb-10 max-w-sm font-medium">
                                     A design-driven marketplace platform. Curating state-of-the-art objects for the modern collector.
@@ -302,7 +305,7 @@ export default function Layout({ children }) {
                     {/* Final Legal Bar */}
                     <div className="border-t border-border/10">
                         <div className="container px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-black tracking-[0.3em] text-muted-foreground uppercase opacity-40">
-                            <p>© 2026 UNIMARKET / LONDON CORE</p>
+                            <p>© 2026 UNIMARKET / MALAWI</p>
                             <div className="flex gap-8">
                                 <Link to="#" className="hover:text-primary">Legal</Link>
                                 <Link to="#" className="hover:text-primary">Privacy</Link>
@@ -324,15 +327,15 @@ export default function Layout({ children }) {
                     >
                         <Link
                             to="/cart"
-                            className="flex items-center gap-4 bg-black text-white px-8 py-5 rounded-2xl shadow-premium hover:bg-primary transition-all group active:scale-95"
+                            className="flex items-center gap-4 bg-black text-white dark:bg-white dark:text-black px-8 py-5 rounded-2xl shadow-premium hover:bg-primary dark:hover:bg-primary transition-all group active:scale-95"
                         >
                             <div className="relative">
                                 <ShoppingBag size={22} className="group-hover:scale-110 transition-transform" />
-                                <span className="absolute -top-2 -right-2 w-5 h-5 bg-luxury rounded-full flex items-center justify-center text-[10px] font-black border-2 border-black">
+                                <span className="absolute -top-2 -right-2 w-5 h-5 bg-luxury text-white text-[10px] font-black border-2 border-black dark:border-white rounded-full flex items-center justify-center">
                                     {cartCount}
                                 </span>
                             </div>
-                            <div className="flex flex-col items-start pr-4 border-r border-white/20 mr-2">
+                            <div className="flex flex-col items-start pr-4 border-r border-white/20 dark:border-black/10 mr-2">
                                 <span className="text-[10px] font-black uppercase tracking-widest opacity-50">Checkout</span>
                                 <span className="text-sm font-black tracking-tight">CART SUMMARY</span>
                             </div>

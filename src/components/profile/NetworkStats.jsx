@@ -36,13 +36,13 @@ export default function NetworkStats() {
                 {[{ label: "Network", value: referrals.length.toString(), icon: Users }].map((stat, i) => (
                     <div key={i}
                         onClick={() => stat.label === 'Network' && setIsViewingNetwork(!isViewingNetwork)}
-                        className={`glass p-6 rounded-[1.5rem] border border-border/10 hover:border-border/30 transition-all group cursor-pointer ${stat.label === 'Network' && isViewingNetwork ? 'ring-2 ring-primary' : ''}`}
+                        className={`glass-thick p-6 rounded-[1.5rem] border border-border/10 hover:border-border/30 transition-all group cursor-pointer ${stat.label === 'Network' && isViewingNetwork ? 'ring-2 ring-primary' : ''}`}
                     >
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-secondary rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
+                            <div className="p-3 bg-muted rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                                 <stat.icon size={20} />
                             </div>
-                            <span className="text-2xl font-black tracking-tighter">{stat.value}</span>
+                            <span className="text-2xl font-black tracking-tighter text-foreground">{stat.value}</span>
                         </div>
                         <div className="flex justify-between items-end">
                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</span>
@@ -66,17 +66,17 @@ export default function NetworkStats() {
                             {referrals.length > 0 ? (
                                 <div className="space-y-3">
                                     {referrals.map((refUser, i) => (
-                                        <div key={i} className="flex items-center justify-between p-3 bg-white/50 rounded-xl border border-white/20">
+                                        <div key={i} className="flex items-center justify-between p-3 bg-card dark:bg-muted border border-border/10 rounded-xl">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                                                     {refUser.firstname?.charAt(0) || 'U'}
                                                 </div>
                                                 <div>
-                                                    <div className="font-bold text-xs">{refUser.firstname} {refUser.lastname}</div>
+                                                    <div className="font-bold text-xs text-foreground">{refUser.firstname} {refUser.lastname}</div>
                                                     <div className="text-[10px] text-muted-foreground">{refUser.school || 'Unknown'}</div>
                                                 </div>
                                             </div>
-                                            <span className="text-[10px] font-mono opacity-50">{refUser.createdAt?.seconds ? new Date(refUser.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
+                                            <span className="text-[10px] font-mono opacity-50 dark:text-foreground/40">{refUser.createdAt?.seconds ? new Date(refUser.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</span>
                                         </div>
                                     ))}
                                 </div>

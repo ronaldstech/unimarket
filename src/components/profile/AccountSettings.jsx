@@ -31,27 +31,27 @@ export default function AccountSettings() {
                     <button
                         onClick={handlePasswordReset}
                         disabled={sendingReset}
-                        className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-secondary/50 transition-colors group"
+                        className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-muted transition-colors group"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="p-2 bg-secondary rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
+                            <div className="p-2 bg-muted rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
                                 <KeyRound size={18} />
                             </div>
                             <div className="text-left">
-                                <span className="block font-bold text-sm">{sendingReset ? 'Sending...' : 'Reset Password'}</span>
+                                <span className="block font-bold text-sm text-foreground">{sendingReset ? 'Sending...' : 'Reset Password'}</span>
                                 <span className="text-[10px] text-muted-foreground">Send recovery email</span>
                             </div>
                         </div>
                         <ChevronRight size={16} className="text-muted-foreground/50" />
                     </button>
 
-                    <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-secondary/50 transition-colors group">
+                    <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-muted transition-colors group">
                         <div className="flex items-center gap-4">
-                            <div className="p-2 bg-secondary rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
+                            <div className="p-2 bg-muted rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
                                 <Share2 size={18} />
                             </div>
                             <div className="text-left">
-                                <span className="block font-bold text-sm">Connected Apps</span>
+                                <span className="block font-bold text-sm text-foreground">Connected Apps</span>
                                 <span className="text-[10px] text-muted-foreground">Manage access</span>
                             </div>
                         </div>
@@ -62,7 +62,7 @@ export default function AccountSettings() {
 
             <button
                 onClick={logout}
-                className="w-full bg-red-50 text-red-500 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-100 transition-colors flex items-center justify-center gap-3 mt-8"
+                className="w-full bg-red-500/10 text-red-500 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-500/20 transition-colors flex items-center justify-center gap-3 mt-8 border border-red-500/20"
             >
                 <LogOut size={18} />
                 <span>Logout</span>

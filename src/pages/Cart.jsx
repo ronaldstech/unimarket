@@ -111,9 +111,9 @@ export default function Cart() {
     };
 
     return (
-        <div className="min-h-screen bg-[#fafafa] pt-32 pb-20 px-4 md:px-8 lg:px-12 relative overflow-hidden">
+        <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-8 lg:px-12 relative overflow-hidden">
             {/* Ambient Background Element */}
-            <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header Section */}
@@ -126,7 +126,7 @@ export default function Cart() {
                             to="/browse"
                             className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all mb-8 group"
                         >
-                            <div className="p-2 rounded-full bg-white shadow-sm group-hover:shadow-md transition-all">
+                            <div className="p-2 rounded-full bg-card shadow-sm group-hover:shadow-md transition-all border border-border/10">
                                 <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                             </div>
                             Return to Gallery
@@ -141,7 +141,7 @@ export default function Cart() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white/50 backdrop-blur-xl rounded-[3rem] p-24 text-center border border-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)]"
+                        className="bg-card/50 backdrop-blur-xl rounded-[3rem] p-24 text-center border border-border/50 shadow-premium"
                     >
                         <div className="w-24 h-24 bg-secondary rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 shadow-inner">
                             <ShoppingBag size={40} className="text-primary/20" />
@@ -173,7 +173,7 @@ export default function Cart() {
                                         layout
                                         variants={itemVariants}
                                         exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                                        className="bg-white hover:bg-white/80 border border-black/5 p-4 rounded-[2rem] flex items-center gap-6 group transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-black/5"
+                                        className="bg-card hover:bg-card/80 border border-border/50 p-4 rounded-[2rem] flex items-center gap-6 group transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-black/5"
                                     >
                                         <div className="w-40 h-40 rounded-[1.5rem] overflow-hidden bg-secondary shrink-0 relative">
                                             <img
@@ -191,24 +191,24 @@ export default function Cart() {
                                             <p className="text-primary font-bold text-xl tabular-nums mb-4">{formatCurrency(item.price)}</p>
 
                                             <div className="flex items-center gap-6">
-                                                <div className="flex items-center bg-secondary/50 rounded-full p-1 border border-black/5">
+                                                <div className="flex items-center bg-muted rounded-full p-1 border border-border/50">
                                                     <button
                                                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-all shadow-sm"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-card transition-all shadow-sm"
                                                     >
                                                         <Minus size={12} />
                                                     </button>
                                                     <span className="w-10 text-center font-black text-sm tabular-nums">{item.quantity}</span>
                                                     <button
                                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-all shadow-sm"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-card transition-all shadow-sm"
                                                     >
                                                         <Plus size={12} />
                                                     </button>
                                                 </div>
                                                 <button
                                                     onClick={() => removeFromCart(item.id)}
-                                                    className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
+                                                    className="p-2 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-full transition-all"
                                                 >
                                                     <Trash2 size={18} />
                                                 </button>
@@ -221,12 +221,12 @@ export default function Cart() {
 
                         {/* Summary Sidebar */}
                         <aside className="lg:col-span-5 sticky top-32">
-                            <div className="bg-white rounded-[3rem] p-10 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] border border-black/5">
+                            <div className="bg-card rounded-[3rem] p-10 shadow-premium border border-border/50">
                                 <div className="flex justify-between items-center mb-10">
-                                    <h3 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/40">Statement</h3>
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full">
+                                    <h3 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/40 leading-none">Statement</h3>
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="text-[9px] font-black text-emerald-600 uppercase">Live Rates</span>
+                                        <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase">Live Rates</span>
                                     </div>
                                 </div>
 
@@ -259,18 +259,18 @@ export default function Cart() {
                                 <button
                                     onClick={handleCheckout}
                                     disabled={isProcessing}
-                                    className="w-full bg-black text-white py-8 rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-primary transition-all shadow-2xl shadow-black/20 group disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full bg-primary text-primary-foreground py-8 rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:opacity-90 transition-all shadow-2xl shadow-primary/20 group disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isProcessing ? 'Processing Index...' : 'Secure Checkout'}
                                     {!isProcessing && <CreditCard size={20} className="group-hover:translate-x-1 transition-transform" />}
                                 </button>
 
                                 <div className="mt-8 grid grid-cols-2 gap-3">
-                                    <div className="flex items-center gap-3 p-4 bg-secondary/30 rounded-2xl border border-white/50">
+                                    <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-2xl border border-border/50">
                                         <ShieldCheck size={20} className="text-primary/60" />
                                         <span className="text-[8px] font-black uppercase tracking-widest leading-tight">Authenticity<br />Guaranteed</span>
                                     </div>
-                                    <div className="flex items-center gap-3 p-4 bg-secondary/30 rounded-2xl border border-white/50">
+                                    <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-2xl border border-border/50">
                                         <Truck size={20} className="text-primary/60" />
                                         <span className="text-[8px] font-black uppercase tracking-widest leading-tight">Global<br />Protocol</span>
                                     </div>

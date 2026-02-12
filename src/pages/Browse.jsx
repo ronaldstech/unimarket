@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 
-const HorizontalSection = ({ title, icon: Icon, products, onQuickView }) => {
+const HorizontalSection = ({ title, icon: Icon, products }) => {
     const scrollRef = useRef(null);
 
     return (
@@ -35,7 +35,6 @@ const HorizontalSection = ({ title, icon: Icon, products, onQuickView }) => {
                     <div key={product.id} className="w-[280px] flex-shrink-0 snap-start">
                         <ProductCard
                             product={product}
-                            onQuickView={onQuickView}
                         />
                     </div>
                 ))}
@@ -49,7 +48,6 @@ export default function Browse() {
     const urlCategory = searchParams.get('category') || "All";
     const [selectedCategory, setSelectedCategory] = useState(urlCategory);
     const [sortOrder, setSortOrder] = useState("Featured");
-    const [quickViewProduct, setQuickViewProduct] = useState(null);
     const { products, loading, loadingMore, error, hasMore, loadMore } = useProducts(selectedCategory);
     const { categories: dynamicCategories } = useCategories();
     const [searchQuery, setSearchQuery] = useState("");
@@ -135,7 +133,7 @@ export default function Browse() {
     return (
         <div className="container py-12 px-6 min-h-screen text-foreground relative">
             {/* Ambient Background Grid */}
-            <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.15]" />
+            <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.15] dark:opacity-[0.05]" />
 
             <div className="flex flex-col gap-12 relative z-10">
                 {/* Header / Filter Bar */}
@@ -146,9 +144,9 @@ export default function Browse() {
                                 <nav className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] mb-4 opacity-40">
                                     <Link to="/" className="hover:text-primary transition-colors">Home</Link>
                                     <ChevronDown size={10} className="-rotate-90" />
-                                    <span className="text-primary">Catalogue Registry</span>
+                                    <span className="text-primary dark:text-luxury">Catalogue Registry</span>
                                 </nav>
-                                <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-2">
+                                <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-2 text-foreground">
                                     Catalogue <span className="text-luxury">Registry</span>
                                 </h1>
                                 <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
@@ -164,14 +162,14 @@ export default function Browse() {
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         placeholder="Search registry..."
-                                        className="bg-secondary/30 border border-transparent py-4 pl-12 pr-12 rounded-2xl focus:bg-white focus:border-border/50 focus:outline-none transition-all font-bold text-[10px] tracking-widest uppercase w-full md:w-64 shadow-soft"
+                                        className="bg-secondary/50 dark:bg-card border border-transparent dark:border-white/5 py-4 pl-12 pr-12 rounded-2xl focus:bg-white dark:focus:bg-black focus:border-border/50 focus:outline-none transition-all font-bold text-[10px] tracking-widest uppercase w-full md:w-64 shadow-soft"
                                     />
                                 </div>
 
                                 <div className="relative">
                                     <button
                                         onClick={() => setIsSortOpen(!isSortOpen)}
-                                        className={`flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all font-black text-[10px] uppercase tracking-widest shadow-soft ${isSortOpen ? 'bg-white border-primary text-primary' : 'bg-secondary/30 border-transparent hover:bg-white hover:border-border/50'}`}
+                                        className={`flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all font-black text-[10px] uppercase tracking-widest shadow-soft ${isSortOpen ? 'bg-white dark:bg-black border-primary text-primary' : 'bg-secondary/50 dark:bg-card border-transparent dark:border-white/5 hover:bg-white dark:hover:bg-black hover:border-border/50 font-black'}`}
                                     >
                                         <SlidersHorizontal size={14} />
                                         <span>{sortOrder}</span>
@@ -224,10 +222,10 @@ export default function Browse() {
                                 </div>
                             </div>
 
-                            <div className="glass-thick px-8 py-4 rounded-xl border border-border/30 shadow-soft min-w-[320px]">
+                            <div className="glass-thick px-8 py-4 rounded-xl border border-border/30 dark:border-white/10 shadow-soft min-w-[320px]">
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/30">Valuation Limit</h3>
-                                    <span className="font-black text-primary text-[10px] tracking-tighter">MWK {priceRange.toLocaleString()}</span>
+                                    <h3 className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/30 dark:text-white/30">Valuation Limit</h3>
+                                    <span className="font-black text-primary dark:text-luxury text-[10px] tracking-tighter">MWK {priceRange.toLocaleString()}</span>
                                 </div>
                                 <input
                                     type="range"
@@ -236,7 +234,7 @@ export default function Browse() {
                                     step="500"
                                     value={priceRange}
                                     onChange={(e) => setPriceRange(parseInt(e.target.value))}
-                                    className="w-full h-1 bg-secondary rounded-full appearance-none cursor-pointer accent-primary"
+                                    className="w-full h-1 bg-secondary dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-primary dark:accent-luxury"
                                 />
                             </div>
                         </div>
@@ -252,19 +250,16 @@ export default function Browse() {
                                 title="Most Selling"
                                 icon={TrendingUp}
                                 products={mostSelling}
-                                onQuickView={setQuickViewProduct}
                             />
                             <HorizontalSection
                                 title="Promotions"
                                 icon={Zap}
                                 products={promotions}
-                                onQuickView={setQuickViewProduct}
                             />
                             <HorizontalSection
                                 title="New Arrivals"
                                 icon={Clock}
                                 products={newArrivals}
-                                onQuickView={setQuickViewProduct}
                             />
                         </>
                     )}
@@ -297,7 +292,6 @@ export default function Browse() {
                                         <ProductCard
                                             key={product.id}
                                             product={product}
-                                            onQuickView={(p) => setQuickViewProduct(p)}
                                         />
                                     ))
                                 )}

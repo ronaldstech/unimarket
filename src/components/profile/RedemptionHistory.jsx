@@ -135,10 +135,10 @@ export default function RedemptionHistory() {
     if (redemptions.length === 0) {
         return (
             <div className="glass-thick p-12 rounded-[2rem] text-center">
-                <div className="w-20 h-20 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-20 h-20 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Receipt size={32} className="text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tight mb-2">No Redemptions Yet</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight mb-2 text-foreground">No Redemptions Yet</h3>
                 <p className="text-sm text-muted-foreground">Your redemption history will appear here</p>
             </div>
         );
@@ -146,7 +146,7 @@ export default function RedemptionHistory() {
 
     return (
         <div className="space-y-4">
-            <h3 className="text-xl font-black uppercase tracking-tight mb-4">Redemption History</h3>
+            <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-foreground">Redemption History</h3>
 
             {redemptions.map((redemption, index) => (
                 <motion.div
@@ -163,7 +163,7 @@ export default function RedemptionHistory() {
                                     <CreditCard size={20} />
                                 </div>
                                 <div>
-                                    <div className="font-black text-lg tracking-tight">MWK {redemption.airtimeAmount}</div>
+                                    <div className="font-black text-lg tracking-tight text-foreground">MWK {redemption.airtimeAmount}</div>
                                     <div className="text-xs text-muted-foreground font-medium">{redemption.pointsRedeemed} Points Redeemed</div>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@ export default function RedemptionHistory() {
                             </div>
 
                             {redemption.billerReceipt && (
-                                <div className="text-[10px] font-mono bg-secondary/50 px-3 py-2 rounded-lg inline-block">
+                                <div className="text-[10px] font-mono bg-muted px-3 py-2 rounded-lg inline-block text-foreground/80">
                                     Receipt: {redemption.billerReceipt}
                                 </div>
                             )}

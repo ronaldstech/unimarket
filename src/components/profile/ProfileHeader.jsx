@@ -71,11 +71,11 @@ export default function ProfileHeader({ isEditing, setIsEditing }) {
             <div className="flex flex-col md:flex-row gap-8 items-start relative z-10">
                 {/* Avatar Upload */}
                 <div className="relative shrink-0">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2rem] bg-secondary shadow-inner overflow-hidden border-4 border-white flex items-center justify-center relative group-upload">
+                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2rem] bg-muted shadow-inner overflow-hidden border-4 border-card flex items-center justify-center relative group-upload">
                         {user?.photoURL ? (
                             <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                            <User size={48} className="text-secondary-foreground/20" />
+                            <User size={48} className="text-muted-foreground/20" />
                         )}
 
                         {/* Upload Overlay */}
@@ -96,18 +96,18 @@ export default function ProfileHeader({ isEditing, setIsEditing }) {
                             <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
                         </label>
                     </div>
-                    <div className="absolute -bottom-3 -right-3 bg-white p-2 rounded-xl shadow-lg border border-border/10">
+                    <div className="absolute -bottom-3 -right-3 bg-card p-2 rounded-xl shadow-lg border border-border/10">
                         <span className="w-3 h-3 block rounded-full bg-emerald-500 animate-pulse" />
                     </div>
                 </div>
 
                 <div className="space-y-2 flex-1 w-full">
-                    <div className="flex justify-between items-start w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4">
                         <div>
                             <div className="flex items-center gap-3 mb-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Active Terminal</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">Active Terminal</span>
                             </div>
-                            <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-2">
+                            <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-2 text-foreground">
                                 {user?.firstname} {user?.lastname}
                             </h1>
                             <div className="flex items-center gap-2 text-muted-foreground font-medium">
@@ -118,7 +118,7 @@ export default function ProfileHeader({ isEditing, setIsEditing }) {
 
                         <button
                             onClick={() => setIsEditing(!isEditing)}
-                            className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold text-sm ${isEditing ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-secondary hover:bg-secondary/80'}`}
+                            className={`px-6 py-3 rounded-xl transition-all flex items-center gap-2 font-bold text-sm ${isEditing ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-muted hover:bg-muted/80 text-foreground'}`}
                         >
                             {isEditing ? <Check size={18} /> : <Edit2 size={18} />}
                             {isEditing ? 'Save Changes' : 'Edit Profile'}

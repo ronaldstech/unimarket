@@ -46,7 +46,7 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                     onSubmit={handleSubmit}
                     className="overflow-hidden"
                 >
-                    <div className="glass p-6 rounded-[2rem] border border-border/10 space-y-4">
+                    <div className="glass-thick p-6 rounded-[2rem] border border-border/10 space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1">
                                 <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground pl-2">First Name</label>
@@ -54,7 +54,7 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                                     name="firstname"
                                     value={formData.firstname}
                                     onChange={handleChange}
-                                    className="w-full bg-white border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none"
+                                    className="w-full bg-card dark:bg-muted border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none text-foreground"
                                 />
                             </div>
                             <div className="space-y-1">
@@ -63,7 +63,7 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                                     name="lastname"
                                     value={formData.lastname}
                                     onChange={handleChange}
-                                    className="w-full bg-white border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none"
+                                    className="w-full bg-card dark:bg-muted border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none text-foreground"
                                 />
                             </div>
                             <div className="space-y-1">
@@ -72,7 +72,7 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
-                                    className="w-full bg-white border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none"
+                                    className="w-full bg-card dark:bg-muted border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none text-foreground"
                                 />
                             </div>
                             <div className="space-y-1">
@@ -82,13 +82,13 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                                         name="school"
                                         value={formData.school}
                                         onChange={handleChange}
-                                        className="w-full bg-white border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none appearance-none"
+                                        className="w-full bg-card dark:bg-muted border border-border/20 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 ring-primary/10 outline-none appearance-none text-foreground"
                                     >
-                                        <option value="MUBAS">MUBAS</option>
-                                        <option value="UNIMA">UNIMA</option>
-                                        <option value="LUANAR">LUANAR</option>
+                                        <option value="MUBAS" className="bg-card text-foreground">MUBAS</option>
+                                        <option value="UNIMA" className="bg-card text-foreground">UNIMA</option>
+                                        <option value="LUANAR" className="bg-card text-foreground">LUANAR</option>
                                     </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 dark:text-foreground">
                                         <ChevronRight size={16} className="rotate-90" />
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@ export default function ProfileEditForm({ isEditing, setIsEditing }) {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-primary text-primary-foreground px-6 py-2 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+                                className="bg-primary text-primary-foreground px-6 py-2 rounded-xl font-bold text-sm shadow-xl shadow-primary/20 hover:opacity-90 transition-opacity"
                             >
                                 {loading ? 'Saving...' : 'Save Changes'}
                             </button>
