@@ -23,7 +23,7 @@ const HorizontalSection = ({ title, icon: Icon, products }) => {
                     </div>
                 </div>
                 <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] hover:text-primary transition-colors group">
-                    View All <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    View All A<ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </button>
             </div>
 
