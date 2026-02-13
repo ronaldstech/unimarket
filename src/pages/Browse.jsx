@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useNewArrivals } from '../hooks/useNewArrivals';
+import { usePromotions } from '../hooks/usePromotions';
 import { useCategories } from '../hooks/useCategories';
 
 const HorizontalSection = ({ title, icon: Icon, products }) => {
@@ -51,6 +52,7 @@ export default function Browse() {
     const [sortOrder, setSortOrder] = useState("Featured");
     const { products, loading, loadingMore, error, hasMore, loadMore } = useProducts(selectedCategory);
     const { products: fetchedNewArrivals, loading: loadingNewArrivals } = useNewArrivals(6);
+    const { products: fetchedPromotions, loading: loadingPromotions } = usePromotions(6);
     const { categories: dynamicCategories } = useCategories();
     const [searchQuery, setSearchQuery] = useState("");
     const [priceRange, setPriceRange] = useState(100000);
@@ -113,7 +115,7 @@ export default function Browse() {
     }, [products, searchQuery, priceRange, sortOrder]);
 
     const mostSelling = useMemo(() => products.slice(0, 6), [products]);
-    const promotions = useMemo(() => products.filter(p => p.discount).slice(0, 6), [products]);
+    const promotions = useMemo(() => fetchedPromotions, [fetchedPromotions]);
     const newArrivals = useMemo(() => fetchedNewArrivals, [fetchedNewArrivals]);
 
     const categories = ["All", ...dynamicCategories.map(c => c.name).filter(n => n !== "All")];
@@ -245,7 +247,7 @@ export default function Browse() {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="space-y-24">
+                <div className="space-y-10">
                     {/* Horizontal Sections */}
                     {selectedCategory === "All" && !searchQuery && (
                         <>

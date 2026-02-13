@@ -43,7 +43,9 @@ export default function Products() {
         description: '',
         imageUrl: '',
         imageUrl_original: '',
-        variants: [] // Array of { name: '', price: '' }
+        variants: [], // Array of { name: '', price: '' }
+        isPromotion: false,
+        promotionLabel: ''
     };
     const [formData, setFormData] = useState(initialFormState);
     const [submitLoading, setSubmitLoading] = useState(false);
@@ -94,7 +96,9 @@ export default function Products() {
                 description: product.description || '',
                 imageUrl: product.images && product.images.length > 0 ? product.images[0] : '',
                 imageUrl_original: product.images && product.images.length > 1 ? product.images[1] : (product.images && product.images.length > 0 ? product.images[0] : ''),
-                variants: product.variants || []
+                variants: product.variants || [],
+                isPromotion: product.isPromotion || false,
+                promotionLabel: product.promotionLabel || ''
             });
         } else {
             setEditingProduct(null);
@@ -153,6 +157,8 @@ export default function Products() {
             description: formData.description,
             images: formData.imageUrl ? (formData.imageUrl_original ? [formData.imageUrl, formData.imageUrl_original] : [formData.imageUrl]) : [],
             variants: formData.variants || [],
+            isPromotion: formData.isPromotion,
+            promotionLabel: formData.promotionLabel,
             updatedAt: new Date().toISOString(),
             updatedBy: user?.uid || 'admin'
         };

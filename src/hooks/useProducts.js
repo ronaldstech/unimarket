@@ -55,12 +55,15 @@ export function useProducts(selectedCategory = "All") {
                         image: data.images && data.images.length > 0
                             ? data.images[0]
                             : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80",
+                        images: data.images || [],
                         school: data.school,
                         stock: data.stock,
                         variants: data.variants || [],
                         createdAt: data.createdAt,
                         updatedAt: data.updatedAt,
-                        isNew: data.isNew // Keep this for backward compatibility if needed
+                        isPromotion: data.isPromotion,
+                        promotionLabel: data.promotionLabel,
+                        discount: data.discount
                     };
                 });
 

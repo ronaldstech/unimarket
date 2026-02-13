@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Edit2, Trash2, ImageIcon, Package } from 'lucide-react';
+import { Edit2, Trash2, ImageIcon, Package, Zap } from 'lucide-react';
 
 export default function ProductCard({ product, index, onEdit, onDelete }) {
     const stock = parseInt(product.stock) || 0;
@@ -25,7 +25,13 @@ export default function ProductCard({ product, index, onEdit, onDelete }) {
                 )}
 
                 {/* Status Badge */}
-                <div className="absolute top-3 left-3 z-10">
+                <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+                    {product.isPromotion && (
+                        <span className="bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-md shadow-lg flex items-center gap-1.5 border border-white/20">
+                            <Zap size={10} fill="currentColor" />
+                            {product.promotionLabel || "Promo"}
+                        </span>
+                    )}
                     {isOutOfStock ? (
                         <span className="bg-red-500 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shadow-sm">Out of Stock</span>
                     ) : isLowStock ? (

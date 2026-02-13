@@ -13,6 +13,8 @@ import { Shield, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
 import { googleProvider } from '../lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
 
+import LoadingScreen from '../components/ui/LoadingScreen';
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -256,7 +258,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {loading ? <LoadingScreen /> : children}
         </AuthContext.Provider>
     );
 };

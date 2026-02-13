@@ -1,4 +1,4 @@
-import { Plus, Heart, ShoppingBag, Eye, Star } from 'lucide-react';
+import { Plus, Heart, ShoppingBag, Eye, Star, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
@@ -20,10 +20,14 @@ export default function ProductCard({ product, onQuickView }) {
             className="group relative flex flex-col bg-card rounded-xl overflow-hidden transition-all duration-500 hover:shadow-premium border border-border/50 dark:border-white/10 cursor-pointer"
         >
             {/* Image Container */}
-            <div className="relative aspect-[4/5] overflow-hidden bg-secondary/30">
+            <div
+                className="relative aspect-[4/5] overflow-hidden bg-secondary/30 protect-image"
+                onContextMenu={(e) => e.preventDefault()}
+            >
                 <img
                     src={product.image}
                     alt={product.name}
+                    draggable="false"
                     className="w-full h-full object-cover transition-transform duration-1000 cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-105"
                 />
 
@@ -32,12 +36,18 @@ export default function ProductCard({ product, onQuickView }) {
 
                 {/* Floating Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                    {product.isPromotion && (
+                        <span className="px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest shadow-lg border border-white/20 flex items-center gap-2">
+                            <Zap size={12} fill="currentColor" />
+                            {product.promotionLabel || "Promo"}
+                        </span>
+                    )}
                     {product.isNew && (
                         <span className="px-3 py-1 rounded-full bg-white dark:bg-black text-[10px] font-black uppercase tracking-widest shadow-soft text-foreground">
                             New
                         </span>
                     )}
-                    {product.discount && (
+                    {product.discount && !product.isPromotion && (
                         <span className="px-3 py-1 rounded-full bg-luxury text-white text-[10px] font-black uppercase tracking-widest shadow-soft">
                             -{product.discount}%
                         </span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Loader, CloudUpload, DollarSign, Plus, Trash2 } from 'lucide-react';
+import { X, Save, Loader, CloudUpload, DollarSign, Plus, Trash2, Zap } from 'lucide-react';
 
 export default function ProductModal({
     isOpen,
@@ -141,6 +141,59 @@ export default function ProductModal({
                                                     className="w-full bg-white dark:bg-black/20 border border-border/10 rounded-xl pl-14 pr-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-mono font-medium text-muted-foreground line-through decoration-red-500/30"
                                                 />
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Promotion Program Section */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 mt-2 border-t border-border/10 bg-primary/5 rounded-3xl p-6 border border-primary/20">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <Zap size={16} className="text-primary" />
+                                                    <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Promotion Program</h3>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="sr-only peer"
+                                                        checked={formData.isPromotion}
+                                                        onChange={(e) => setFormData({ ...formData, isPromotion: e.target.checked })}
+                                                    />
+                                                    <div className="w-11 h-6 bg-secondary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                                </label>
+                                            </div>
+                                            <p className="text-[10px] text-muted-foreground leading-tight">Flag this asset as being part of an active promotion index.</p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Promo Label</label>
+                                            <input
+                                                type="text"
+                                                value={formData.promotionLabel}
+                                                onChange={(e) => setFormData({ ...formData, promotionLabel: e.target.value })}
+                                                placeholder="e.g. FLASH SALE, 50% OFF"
+                                                className="w-full bg-white dark:bg-black/20 border border-border/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-bold text-xs uppercase tracking-widest"
+                                                disabled={!formData.isPromotion}
+                                            />
+                                        </div>
+
+                                        <div className="col-span-2 flex items-center gap-2 mt-2">
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mr-2">Quick Discount:</span>
+                                            {[10, 20, 50].map(pct => (
+                                                <button
+                                                    key={pct}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const retail = parseFloat(formData.actualPrice) || 0;
+                                                        if (retail > 0) {
+                                                            setFormData({ ...formData, price: (retail * (1 - pct / 100)).toFixed(0), isPromotion: true, promotionLabel: `${pct}% OFF` });
+                                                        }
+                                                    }}
+                                                    className="px-3 py-1.5 rounded-lg bg-card border border-border/10 text-[9px] font-black uppercase hover:bg-primary hover:text-white transition-all shadow-sm"
+                                                >
+                                                    -{pct}%
+                                                </button>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>

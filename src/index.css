@@ -237,4 +237,22 @@
   .premium-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary);
   }
+
+  /* Image Protection Deterrents */
+  .protect-image {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: auto;
+    position: relative;
+  }
+
+  .protect-image img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
 }

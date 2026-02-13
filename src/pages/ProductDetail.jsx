@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../lib/firebase';
 import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import {
@@ -32,6 +32,7 @@ export default function ProductDetail() {
     const [activeFinish, setActiveFinish] = useState(0);
     const [copied, setCopied] = useState(false);
     const [selectedVariant, setSelectedVariant] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(0);
 
     const referralCode = searchParams.get('ref');
 
@@ -47,9 +48,10 @@ export default function ProductDetail() {
                         name: data.title || "Untitled Product",
                         price: parseFloat(data.price) || 0,
                         originalPrice: parseFloat(data.actualPrice) || 0,
-                        image: data.images && data.images.length > 0
-                            ? data.images[0]
-                            : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80"
+                        images: data.images && data.images.length > 0
+                            ? data.images
+                            : ["https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80"],
+                        image: data.images && data.images.length > 0 ? data.images[0] : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80"
                     });
 
                     // Track referral if present and different from current user
@@ -173,27 +175,65 @@ export default function ProductDetail() {
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="relative"
+                                className="flex flex-col gap-6"
                             >
-                                <div className="aspect-[4/5] bg-secondary/20 rounded-[3rem] overflow-hidden relative group border border-border/10">
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                    />
+                                <div
+                                    className="aspect-[4/5] bg-secondary/20 rounded-[3rem] overflow-hidden relative group border border-border/10 shadow-premium protect-image"
+                                    onContextMenu={(e) => e.preventDefault()}
+                                >
+                                    <AnimatePresence mode="wait">
+                                        <motion.img
+                                            key={selectedImage}
+                                            initial={{ opacity: 0, scale: 1.1 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                            src={product.images[selectedImage]}
+                                            alt={product.name}
+                                            draggable="false"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </AnimatePresence>
 
                                     {/* Badges */}
-                                    <div className="absolute top-8 left-8 flex flex-col gap-2">
+                                    <div className="absolute top-8 left-8 flex flex-col gap-2 z-20">
                                         {product.isNew && (
-                                            <span className="bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full backdrop-blur-md">
+                                            <span className="bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full backdrop-blur-md shadow-lg">
                                                 Edition 01 / New
                                             </span>
                                         )}
-                                        <span className="bg-card backdrop-blur-md text-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-border/20 shadow-xl">
+                                        <span className="bg-white/90 dark:bg-card/90 backdrop-blur-md text-foreground text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-border/20 shadow-lg">
                                             {product.category}
                                         </span>
                                     </div>
                                 </div>
+
+                                {/* Thumbnails */}
+                                {product.images.length > 1 && (
+                                    <div className="flex gap-4 px-2 overflow-x-auto pb-2 premium-scrollbar">
+                                        {product.images.map((img, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setSelectedImage(idx)}
+                                                className={`relative w-24 aspect-square rounded-2xl overflow-hidden border-2 transition-all duration-300 shrink-0 protect-image ${selectedImage === idx
+                                                    ? 'border-primary ring-4 ring-primary/10'
+                                                    : 'border-transparent opacity-60 hover:opacity-100 hover:scale-105'
+                                                    }`}
+                                                onContextMenu={(e) => e.preventDefault()}
+                                            >
+                                                <img
+                                                    src={img}
+                                                    alt=""
+                                                    draggable="false"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                {selectedImage === idx && (
+                                                    <div className="absolute inset-0 bg-primary/10" />
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </motion.div>
 
                             {/* Details Section */}
@@ -202,6 +242,27 @@ export default function ProductDetail() {
                                 animate={{ opacity: 1, x: 0 }}
                                 className="flex flex-col"
                             >
+                                {product.isPromotion && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="mb-8 p-6 rounded-[2rem] bg-primary text-primary-foreground shadow-xl shadow-primary/20 relative overflow-hidden group"
+                                    >
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                                            <Zap size={80} fill="currentColor" />
+                                        </div>
+                                        <div className="relative z-10 flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20">
+                                                <Zap size={24} fill="currentColor" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-1">Active Promotion</h4>
+                                                <p className="text-xl font-black uppercase tracking-tight">{product.promotionLabel || 'Special Offer'}</p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+
                                 <header className="mb-10">
                                     <div className="flex items-center gap-1.5 text-luxury mb-6">
                                         {[...Array(5)].map((_, i) => (
@@ -222,21 +283,37 @@ export default function ProductDetail() {
 
                                     <div className="flex items-center gap-6 mb-8">
                                         <div className="flex items-baseline gap-4">
-                                            <div className="text-4xl font-black tracking-tighter tabular-nums text-foreground">
-                                                {selectedVariant
-                                                    ? Number(selectedVariant.price).toLocaleString()
-                                                    : Number(product.price).toLocaleString()
-                                                }
-                                                <span className="text-xs ml-2 text-muted-foreground font-bold">MWK</span>
-                                            </div>
+                                            <AnimatePresence mode="wait">
+                                                <motion.div
+                                                    key={selectedVariant ? selectedVariant.name : 'base'}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    className="text-4xl font-black tracking-tighter tabular-nums text-foreground"
+                                                >
+                                                    {selectedVariant
+                                                        ? Number(selectedVariant.price).toLocaleString()
+                                                        : Number(product.price).toLocaleString()
+                                                    }
+                                                    <span className="text-xs ml-2 text-muted-foreground font-bold">MWK</span>
+                                                </motion.div>
+                                            </AnimatePresence>
                                             {product.originalPrice > (selectedVariant ? parseFloat(selectedVariant.price) : product.price) && (
                                                 <span className="text-lg text-muted-foreground line-through opacity-40 font-bold tabular-nums">
                                                     MWK {Number(product.originalPrice).toLocaleString()}
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase rounded-lg border border-emerald-500/20">
-                                            In Stock
+                                        <div className="flex flex-col gap-2 scale-90 origin-left">
+                                            <div className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase rounded-lg border border-emerald-500/20 shadow-sm shadow-emerald-500/5">
+                                                Secure Status
+                                            </div>
+                                            {product.isPromotion && (
+                                                <div className="px-3 py-1 bg-primary text-primary-foreground text-[9px] font-black uppercase rounded-lg shadow-sm border border-white/10 flex items-center gap-1.5">
+                                                    <Zap size={10} fill="currentColor" />
+                                                    PROMO INDEX
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -249,74 +326,92 @@ export default function ProductDetail() {
                                     )}
                                 </header>
 
-                                <div className="space-y-10">
-                                    <p className="text-muted-foreground text-sm leading-relaxed font-medium">
-                                        A masterful fusion of technological precision and aesthetic purity. Crafted for the modern index,
-                                        this object represents the zenith of our design philosophy. Experience unparalleled quality and timeless design.
-                                    </p>
+                                <div className="space-y-12">
+                                    <div className="space-y-4">
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40 dark:text-luxury/40 ml-1">
+                                            Object Narrative
+                                        </h4>
+                                        <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+                                            {product.description || "A masterful fusion of technological precision and aesthetic purity. Crafted for the modern index, this object represents the zenith of our design philosophy. Experience unparalleled quality and timeless design."}
+                                        </p>
+                                    </div>
 
                                     {/* Product Variants Selection */}
                                     {product.variants && product.variants.length > 0 && (
-                                        <div className="space-y-4">
-                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary dark:text-luxury ml-1">
-                                                Select Option
-                                            </h4>
-                                            <div className="flex flex-wrap gap-3">
+                                        <div className="space-y-6">
+                                            <div className="flex items-center justify-between px-1">
+                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary dark:text-luxury">
+                                                    Specifications
+                                                </h4>
+                                                <span className="text-[9px] font-bold text-muted-foreground/40 uppercase">
+                                                    {product.variants.length} Variations detected
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
                                                 {product.variants.map((v, i) => (
                                                     <button
                                                         key={i}
                                                         onClick={() => setSelectedVariant(v)}
-                                                        className={`px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${selectedVariant?.name === v.name
-                                                                ? "bg-primary text-white border-primary shadow-premium"
-                                                                : "bg-secondary/30 border-transparent hover:border-border/50 text-muted-foreground hover:text-foreground"
+                                                        className={`group relative p-4 rounded-2xl border-2 transition-all duration-300 flex flex-col gap-1 text-left ${selectedVariant?.name === v.name
+                                                            ? "bg-primary/5 border-primary shadow-premium"
+                                                            : "bg-secondary/30 border-transparent hover:border-border/50 text-muted-foreground"
                                                             }`}
                                                     >
-                                                        {v.name} • {Number(v.price).toLocaleString()}
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${selectedVariant?.name === v.name ? 'text-primary' : ''}`}>
+                                                            {v.name}
+                                                        </span>
+                                                        <span className={`text-xs font-black tabular-nums transition-colors ${selectedVariant?.name === v.name ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                                            MWK {Number(v.price).toLocaleString()}
+                                                        </span>
+                                                        {selectedVariant?.name === v.name && (
+                                                            <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-primary" />
+                                                        )}
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
                                     )}
 
-                                    {/* Color Options */}
-                                    <div className="flex items-center justify-between p-6 rounded-3xl bg-secondary/50 dark:bg-card border border-border/10">
-                                        <div>
-                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
-                                                Color Variant
+                                    {/* Info Grid - Replaces static color selection for now with more useful info */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="p-6 rounded-[2rem] bg-secondary/30 border border-border/10 flex flex-col gap-2">
+                                            <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">
+                                                Curated School
                                             </h4>
-                                            <div className="flex gap-4">
-                                                {['#000', '#eee', '#c5a358'].map((color, i) => (
-                                                    <button
-                                                        key={i}
-                                                        onClick={() => setActiveFinish(i)}
-                                                        className={`w-8 h-8 rounded-full border-4 transition-all ${activeFinish === i ? 'border-primary dark:border-luxury scale-110' : 'border-transparent scale-100'
-                                                            }`}
-                                                        style={{ backgroundColor: color }}
-                                                    />
-                                                ))}
-                                            </div>
+                                            <span className="text-[10px] font-black uppercase tracking-wider text-foreground">
+                                                {(product.school || "Universal").toUpperCase()}
+                                            </span>
                                         </div>
-                                        <div className="text-right text-foreground">
-                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
-                                                Material
+                                        <div className="p-6 rounded-[2rem] bg-secondary/30 border border-border/10 flex flex-col gap-2">
+                                            <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">
+                                                Inventory Status
                                             </h4>
-                                            <span className="text-xs font-black uppercase">Premium Quality</span>
+                                            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">
+                                                {product.stock > 0 ? 'Secure Placement' : 'Exhausted Index'}
+                                            </span>
                                         </div>
                                     </div>
 
                                     {/* Action Buttons */}
                                     <div className="flex flex-col gap-3">
                                         <div className="flex gap-3">
-                                            <button
+                                            <motion.button
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
                                                 onClick={handleAddToCart}
-                                                className="flex-[4] bg-primary text-primary-foreground py-6 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:opacity-90 transition-all active:scale-[0.98] shadow-2xl shadow-primary/10"
+                                                className="flex-[4] bg-primary text-primary-foreground py-6 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all shadow-2xl shadow-primary/20 hover:shadow-primary/40 relative overflow-hidden group"
                                             >
+                                                <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
                                                 <ShoppingBag size={18} />
                                                 Add to Collection
-                                            </button>
-                                            <button className="flex-1 bg-card rounded-2xl flex items-center justify-center hover:bg-secondary border border-border/10 transition-all text-foreground">
+                                            </motion.button>
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="flex-1 bg-card rounded-2xl flex items-center justify-center hover:bg-secondary border border-border/10 transition-all text-foreground"
+                                            >
                                                 <Heart size={20} />
-                                            </button>
+                                            </motion.button>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-3">

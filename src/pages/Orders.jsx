@@ -179,6 +179,33 @@ export default function Orders() {
         }
     };
 
+    const handleDownloadAsset = async (item) => {
+        if (!item.images || item.images.length < 2) {
+            toast.error('High-resolution asset not available.');
+            return;
+        }
+
+        const originalUrl = item.images[1]; // The original image is the second one
+        const loadingToast = toast.loading('Initiating Secure Download...');
+
+        try {
+            const response = await fetch(originalUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `UNIMARKET-DIGITAL-${item.name.replace(/\s+/g, '-').toUpperCase()}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            toast.success('Asset Downloaded Successfully', { id: loadingToast });
+        } catch (err) {
+            console.error(err);
+            toast.error('Download Failed', { id: loadingToast });
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -274,8 +301,19 @@ export default function Orders() {
                                                 <div className={`w-12 h-12 rounded-lg overflow-hidden shrink-0 ${theme === 'dark' ? 'bg-[#18181b]' : 'bg-white'}`}>
                                                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
-                                                <div className="min-w-0 flex flex-col justify-center">
-                                                    <h4 className="text-[10px] font-black uppercase truncate mb-0.5">{item.name}</h4>
+                                                <div className="min-w-0 flex-1 flex flex-col justify-center">
+                                                    <div className="flex justify-between items-start gap-2">
+                                                        <h4 className="text-[10px] font-black uppercase truncate mb-0.5">{item.name}</h4>
+                                                        {order.status === 'success' && item.category === 'poster & wallpapers' && (
+                                                            <button
+                                                                onClick={() => handleDownloadAsset(item)}
+                                                                className="shrink-0 p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all border border-primary/20"
+                                                                title="Download Original Asset"
+                                                            >
+                                                                <Download size={12} strokeWidth={3} />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-[9px] font-bold text-muted-foreground/50">{item.quantity}×</span>
                                                         <span className="text-[10px] font-black text-primary">{formatCurrency(item.price)}</span>
