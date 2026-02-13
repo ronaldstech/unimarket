@@ -186,6 +186,9 @@ export default function Cart() {
                                         <div className="flex-1 min-w-0 pr-4">
                                             <div className="flex items-center gap-3 mb-2">
                                                 <span className="px-2 py-0.5 rounded-full bg-secondary text-[9px] font-black uppercase tracking-wider text-primary/60">{item.category}</span>
+                                                {item.selectedVariantName && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-primary/10 text-[9px] font-black uppercase tracking-wider text-primary">{item.selectedVariantName}</span>
+                                                )}
                                             </div>
                                             <h3 className="text-2xl font-black tracking-tight uppercase truncate mb-1">{item.name}</h3>
                                             <p className="text-primary font-bold text-xl tabular-nums mb-4">{formatCurrency(item.price)}</p>
@@ -193,21 +196,21 @@ export default function Cart() {
                                             <div className="flex items-center gap-6">
                                                 <div className="flex items-center bg-muted rounded-full p-1 border border-border/50">
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                                                        onClick={() => updateQuantity(item.cartId || item.id, Math.max(1, item.quantity - 1))}
                                                         className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-card transition-all shadow-sm"
                                                     >
                                                         <Minus size={12} />
                                                     </button>
                                                     <span className="w-10 text-center font-black text-sm tabular-nums">{item.quantity}</span>
                                                     <button
-                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                        onClick={() => updateQuantity(item.cartId || item.id, item.quantity + 1)}
                                                         className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-card transition-all shadow-sm"
                                                     >
                                                         <Plus size={12} />
                                                     </button>
                                                 </div>
                                                 <button
-                                                    onClick={() => removeFromCart(item.id)}
+                                                    onClick={() => removeFromCart(item.cartId || item.id)}
                                                     className="p-2 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-full transition-all"
                                                 >
                                                     <Trash2 size={18} />

@@ -65,17 +65,6 @@ export default function ProductCard({ product, onQuickView }) {
                     </button>
                 </div>
 
-                {/* Bottom Quick Add */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(product);
-                    }}
-                    className="absolute bottom-4 left-4 right-4 bg-primary text-primary-foreground py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest translate-y-0 transition-all duration-500 flex items-center justify-center gap-2 shadow-premium hover:opacity-90 active:scale-95"
-                >
-                    <Plus size={14} strokeWidth={3} />
-                    Add to Cart
-                </button>
             </div>
 
             {/* Product Info */}
@@ -114,7 +103,17 @@ export default function ProductCard({ product, onQuickView }) {
 
                 <div className="mt-auto flex items-baseline gap-2">
                     <span className="text-xl font-black tracking-tighter text-foreground">
-                        MWK {Number(product.price).toLocaleString()}
+                        {product.variants && product.variants.length > 0 ? (
+                            (() => {
+                                const prices = product.variants.map(v => parseInt(v.price) || 0).filter(p => p > 0);
+                                if (prices.length === 0) return `MWK ${Number(product.price).toLocaleString()}`;
+                                const min = Math.min(...prices);
+                                const max = Math.max(...prices);
+                                return min === max ? `MWK ${min.toLocaleString()}` : `MWK ${min.toLocaleString()} - ${max.toLocaleString()}`;
+                            })()
+                        ) : (
+                            `MWK ${Number(product.price).toLocaleString()}`
+                        )}
                     </span>
                     {product.originalPrice && (
                         <span className="text-xs text-muted-foreground line-through opacity-40">

@@ -33,8 +33,11 @@ export default function ProfileHeader({ isEditing, setIsEditing }) {
             if (xhr.status === 200) {
                 try {
                     const data = JSON.parse(xhr.responseText);
-                    if (data.url) {
-                        await updateUserProfile(user.uid, { photoURL: data.url });
+                    if (data.optimizedUrl && data.originalUrl) {
+                        await updateUserProfile(user.uid, {
+                            photoURL: data.optimizedUrl,
+                            photoURL_original: data.originalUrl
+                        });
                         toast.success('Profile Picture Updated');
                     } else {
                         throw new Error(data.error || 'Upload failed');

@@ -31,6 +31,7 @@ export default function ProductDetail() {
     const [loading, setLoading] = useState(true);
     const [activeFinish, setActiveFinish] = useState(0);
     const [copied, setCopied] = useState(false);
+    const [selectedVariant, setSelectedVariant] = useState(null);
 
     const referralCode = searchParams.get('ref');
 
@@ -73,7 +74,14 @@ export default function ProductDetail() {
 
     const handleAddToCart = () => {
         if (product) {
-            addToCart(product);
+            const itemToAdd = {
+                ...product,
+                price: selectedVariant ? parseFloat(selectedVariant.price) : product.price,
+                selectedVariantName: selectedVariant ? selectedVariant.name : null,
+                // Create a unique cart ID so different variants of the same product count as separate items
+                cartId: selectedVariant ? `${product.id}-${selectedVariant.name}` : product.id
+            };
+            addToCart(itemToAdd);
         }
     };
 
@@ -215,10 +223,13 @@ export default function ProductDetail() {
                                     <div className="flex items-center gap-6 mb-8">
                                         <div className="flex items-baseline gap-4">
                                             <div className="text-4xl font-black tracking-tighter tabular-nums text-foreground">
-                                                {Number(product.price).toLocaleString()}
+                                                {selectedVariant
+                                                    ? Number(selectedVariant.price).toLocaleString()
+                                                    : Number(product.price).toLocaleString()
+                                                }
                                                 <span className="text-xs ml-2 text-muted-foreground font-bold">MWK</span>
                                             </div>
-                                            {product.originalPrice > product.price && (
+                                            {product.originalPrice > (selectedVariant ? parseFloat(selectedVariant.price) : product.price) && (
                                                 <span className="text-lg text-muted-foreground line-through opacity-40 font-bold tabular-nums">
                                                     MWK {Number(product.originalPrice).toLocaleString()}
                                                 </span>
@@ -243,6 +254,29 @@ export default function ProductDetail() {
                                         A masterful fusion of technological precision and aesthetic purity. Crafted for the modern index,
                                         this object represents the zenith of our design philosophy. Experience unparalleled quality and timeless design.
                                     </p>
+
+                                    {/* Product Variants Selection */}
+                                    {product.variants && product.variants.length > 0 && (
+                                        <div className="space-y-4">
+                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary dark:text-luxury ml-1">
+                                                Select Option
+                                            </h4>
+                                            <div className="flex flex-wrap gap-3">
+                                                {product.variants.map((v, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => setSelectedVariant(v)}
+                                                        className={`px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${selectedVariant?.name === v.name
+                                                                ? "bg-primary text-white border-primary shadow-premium"
+                                                                : "bg-secondary/30 border-transparent hover:border-border/50 text-muted-foreground hover:text-foreground"
+                                                            }`}
+                                                    >
+                                                        {v.name} • {Number(v.price).toLocaleString()}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {/* Color Options */}
                                     <div className="flex items-center justify-between p-6 rounded-3xl bg-secondary/50 dark:bg-card border border-border/10">

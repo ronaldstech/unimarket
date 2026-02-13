@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { collection, query, getDocs, limit, startAfter, where } from 'firebase/firestore';
+import { collection, query, getDocs, limit, startAfter, where, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 const PAGE_SIZE = 6;
@@ -24,13 +24,13 @@ export function useProducts(selectedCategory = "All") {
 
         try {
             const productsRef = collection(db, "data", "stock", "products");
-            let q = query(productsRef, limit(PAGE_SIZE));
 
             // Normalize category for case-insensitive matching
             const normalizedCategory = selectedCategory && typeof selectedCategory === "string" ? selectedCategory.toLowerCase() : selectedCategory;
 
+            let q = query(productsRef, limit(PAGE_SIZE));
+
             if (normalizedCategory !== "all") {
-                console.log("Fetching for selectedCategory:", normalizedCategory);
                 q = query(productsRef, where("category", "==", normalizedCategory), limit(PAGE_SIZE));
             }
 
@@ -45,7 +45,6 @@ export function useProducts(selectedCategory = "All") {
             } else {
                 const fetchedProducts = querySnapshot.docs.map(doc => {
                     const data = doc.data();
-                    console.log(`Product ID: ${doc.id}, DB Category: "${data.category}"`);
                     return {
                         id: doc.id,
                         name: data.title || "Untitled Product",
@@ -57,7 +56,11 @@ export function useProducts(selectedCategory = "All") {
                             ? data.images[0]
                             : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80",
                         school: data.school,
-                        stock: data.stock
+                        stock: data.stock,
+                        variants: data.variants || [],
+                        createdAt: data.createdAt,
+                        updatedAt: data.updatedAt,
+                        isNew: data.isNew // Keep this for backward compatibility if needed
                     };
                 });
 
@@ -70,6 +73,10 @@ export function useProducts(selectedCategory = "All") {
             }
         } catch (err) {
             console.error("Error fetching products:", err);
+            // Check for missing index error (Firebase provides a link in the error message)
+            if (err.message && err.message.includes("index")) {
+                console.error("FIREBASE INDEX ERROR: You likely need to create a composite index. Check the console for a link or visit the Firebase Console > Firestore > Indexes.");
+            }
             setError(err);
         } finally {
             setLoading(false);

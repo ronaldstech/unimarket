@@ -36,11 +36,19 @@ export default function Orders() {
     useEffect(() => {
         if (!user) return;
 
-        const q = query(
-            collection(db, "orders"),
-            where("user.userId", "==", user.uid),
-            orderBy("createdAt", "desc")
-        );
+        let q;
+        if (user.role === 'admin') {
+            q = query(
+                collection(db, "orders"),
+                orderBy("createdAt", "desc")
+            );
+        } else {
+            q = query(
+                collection(db, "orders"),
+                where("user.userId", "==", user.uid),
+                orderBy("createdAt", "desc")
+            );
+        }
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const fetchedOrders = snapshot.docs.map(doc => ({
@@ -190,7 +198,7 @@ export default function Orders() {
                 <header className="mb-10">
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
                         <Link to="/profile" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all mb-6 group">
-                            <div className={`p-1.5 rounded-full shadow-sm group-hover:shadow-md transition-all ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-white'}`}> 
+                            <div className={`p-1.5 rounded-full shadow-sm group-hover:shadow-md transition-all ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-white'}`}>
                                 <ArrowLeft size={12} />
                             </div>
                             Terminal Profile
@@ -262,8 +270,8 @@ export default function Orders() {
                                     {/* Items Preview */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
                                         {order.items?.map((item, i) => (
-                                            <div key={i} className={`flex gap-3 p-3 rounded-xl border border-border/5 ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-secondary/20'}`}> 
-                                                <div className={`w-12 h-12 rounded-lg overflow-hidden shrink-0 ${theme === 'dark' ? 'bg-[#18181b]' : 'bg-white'}`}> 
+                                            <div key={i} className={`flex gap-3 p-3 rounded-xl border border-border/5 ${theme === 'dark' ? 'bg-[#23232a]' : 'bg-secondary/20'}`}>
+                                                <div className={`w-12 h-12 rounded-lg overflow-hidden shrink-0 ${theme === 'dark' ? 'bg-[#18181b]' : 'bg-white'}`}>
                                                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div className="min-w-0 flex flex-col justify-center">

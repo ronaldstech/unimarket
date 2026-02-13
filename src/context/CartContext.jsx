@@ -24,16 +24,18 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product) => {
         setCart((prevCart) => {
-            const existingItem = prevCart.find((item) => item.id === product.id);
+            const idToMatch = product.cartId || product.id;
+            const existingItem = prevCart.find((item) => (item.cartId || item.id) === idToMatch);
             if (existingItem) {
                 return prevCart.map((item) =>
-                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    (item.cartId || item.id) === idToMatch ? { ...item, quantity: item.quantity + 1 } : item
                 );
             }
-            return [...prevCart, { ...product, quantity: 1 }];
+            return [...prevCart, { ...product, quantity: 1, cartId: idToMatch }];
         });
 
-        const isExisting = cart.some(item => item.id === product.id);
+        const idToMatch = product.cartId || product.id;
+        const isExisting = cart.some(item => (item.cartId || item.id) === idToMatch);
         if (isExisting) {
             toast.success(`Increased ${product.name} quantity`, {
                 icon: <PlusCircle size={18} className="text-primary" />
@@ -45,22 +47,22 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const removeFromCart = (productId) => {
-        const itemToRemove = cart.find(item => item.id === productId);
-        setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    const removeFromCart = (cartId) => {
+        const itemToRemove = cart.find(item => (item.cartId || item.id) === cartId);
+        setCart((prevCart) => prevCart.filter((item) => (item.cartId || item.id) !== cartId));
 
         if (itemToRemove) {
-            toast.success(`Removed ${itemToRemove.name}`, {
+            toast.success(`Removed ${itemToRemove.name}${itemToRemove.selectedVariantName ? ` (${itemToRemove.selectedVariantName})` : ''}`, {
                 icon: <Trash2 size={18} className="text-red-500" />
             });
         }
     };
 
-    const updateQuantity = (productId, quantity) => {
+    const updateQuantity = (cartId, quantity) => {
         if (quantity < 1) return;
         setCart((prevCart) =>
             prevCart.map((item) =>
-                item.id === productId ? { ...item, quantity } : item
+                (item.cartId || item.id) === cartId ? { ...item, quantity } : item
             )
         );
     };

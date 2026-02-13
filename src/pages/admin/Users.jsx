@@ -66,6 +66,38 @@ export default function Users() {
         return matchesSearch && matchesRole && matchesSchool;
     });
 
+    const getSchoolStyle = (schoolName) => {
+        const school = schoolName?.toLowerCase() || '';
+        if (school.includes('mubas')) return {
+            border: 'border border-indigo-500/50',
+            bg: 'hover:bg-indigo-300/5',
+            text: 'text-indigo-500',
+            badge: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+            icon: 'text-indigo-500'
+        };
+        if (school.includes('unima')) return {
+            border: 'border border-red-300/50',
+            bg: 'hover:bg-red-300/5',
+            text: 'text-red-500',
+            badge: 'bg-red-500/10 text-red-500 border-red-500/20',
+            icon: 'text-red-500'
+        };
+        if (school.includes('luanar')) return {
+            border: 'border border-emerald-300/50',
+            bg: 'hover:bg-emerald-300/5',
+            text: 'text-emerald-500',
+            badge: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+            icon: 'text-emerald-500'
+        };
+        return {
+            border: 'border border-primary/20',
+            bg: 'hover:bg-white/5',
+            text: 'text-muted-foreground',
+            badge: 'bg-secondary text-muted-foreground border-transparent',
+            icon: 'text-muted-foreground'
+        };
+    };
+
     const exportUsers = () => {
         const headers = ["First Name", "Last Name", "Email", "Phone", "School", "Role", "Points", "Referral Code"];
         const csvContent = [
@@ -205,76 +237,88 @@ export default function Users() {
                     </div>
                 </div>
 
-                {/* Users Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <AnimatePresence>
-                        {filteredUsers.map((user, index) => (
-                            <motion.div
-                                key={user.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ delay: index * 0.05 }}
-                                className="group relative bg-white dark:bg-white/5 border border-border/10 rounded-3xl p-6 hover:shadow-premium hover:border-primary/20 transition-all duration-300"
-                            >
-                                <div className="flex items-start justify-between mb-6">
-                                    <div className="w-16 h-16 rounded-2xl bg-secondary overflow-hidden shadow-soft group-hover:scale-105 transition-transform">
-                                        {user.photoURL ? (
-                                            <img src={user.photoURL} alt={user.firstname} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-primary/10">
-                                                <User className="text-muted-foreground" size={24} />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${user.role === 'admin'
-                                        ? 'bg-luxury/10 text-luxury border-luxury/20'
-                                        : 'bg-secondary text-muted-foreground border-transparent'
-                                        }`}>
-                                        {user.role || 'User'}
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div>
-                                        <h3 className="font-black text-lg leading-tight group-hover:text-primary transition-colors">
-                                            {user.firstname} {user.lastname}
-                                        </h3>
-                                        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mt-1">
-                                            <Mail size={12} />
-                                            <span className="truncate">{user.email}</span>
+                        {filteredUsers.map((user, index) => {
+                            const style = getSchoolStyle(user.school);
+                            return (
+                                <motion.div
+                                    key={user.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    className={`group relative bg-white dark:bg-white/5 border border-border/10 rounded-3xl p-6 transition-all duration-300 ${style.border} ${style.bg}`}
+                                >
+                                    <div className="flex items-start justify-between mb-6">
+                                        <div className={`w-16 h-16 rounded-2xl bg-secondary overflow-hidden shadow-soft group-hover:scale-105 transition-transform ring-2 ring-offset-2 ring-transparent group-hover:ring-offset-0 ${style.text.replace('text-', 'group-hover:ring-')}`}>
+                                            {user.photoURL ? (
+                                                <img src={user.photoURL} alt={user.firstname} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-primary/10">
+                                                    <User className="text-muted-foreground" size={24} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${user.role === 'admin'
+                                            ? 'bg-luxury/10 text-luxury border-luxury/20'
+                                            : style.badge
+                                            }`}>
+                                            {user.role || 'User'}
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2 pt-4 border-t border-border/5">
-                                        <div className="flex items-center justify-between text-xs">
-                                            <div className="flex items-center gap-2 text-muted-foreground">
-                                                <School size={12} />
-                                                <span className="font-medium capitalize">{user.school || 'N/A'}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 font-bold text-foreground">
-                                                <Award size={12} className="text-luxury" />
-                                                <span>{user.points?.toLocaleString() || 0} pts</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center justify-between text-xs">
-                                            <div className="flex items-center gap-2 text-muted-foreground">
-                                                <Phone size={12} />
-                                                <span className="font-medium">{user.phone || 'N/A'}</span>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h3 className="font-black text-lg leading-tight group-hover:text-primary transition-colors">
+                                                {user.firstname} {user.lastname}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mt-1">
+                                                <Mail size={12} />
+                                                <span className="truncate">{user.email}</span>
                                             </div>
                                         </div>
 
-                                        {user.myReferralCode && (
-                                            <div className="flex items-center justify-between text-xs pt-2">
-                                                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Referral</span>
-                                                <span className="font-mono bg-secondary/50 px-2 py-0.5 rounded text-[10px]">{user.myReferralCode}</span>
+                                        <div className="space-y-2 pt-4 border-t border-border/5">
+                                            <div className="flex items-center justify-between text-xs">
+                                                <div className={`flex items-center gap-2 transition-colors ${style.text}`}>
+                                                    <School size={12} className={style.icon} />
+                                                    <span className="font-black uppercase tracking-wider">{user.school || 'N/A'}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 font-bold text-foreground">
+                                                    <Award size={12} className="text-luxury" />
+                                                    <span>{user.points?.toLocaleString() || 0} pts</span>
+                                                </div>
                                             </div>
-                                        )}
+
+                                            <div className="flex items-center justify-between text-xs">
+                                                <div className="flex items-center gap-2 text-muted-foreground">
+                                                    <Phone size={12} />
+                                                    <span className="font-medium">{user.phone || 'N/A'}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-muted-foreground" title="Joined Date">
+                                                    <Calendar size={12} />
+                                                    <span className="font-medium">
+                                                        {user.createdAt?.toLocaleDateString('en-GB', {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                            year: '2-digit'
+                                                        })}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {user.myReferralCode && (
+                                                <div className="flex items-center justify-between text-xs pt-2">
+                                                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Referral</span>
+                                                    <span className="font-mono bg-secondary/50 px-2 py-0.5 rounded text-[10px]">{user.myReferralCode}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
+                                </motion.div>
+                            );
+                        })}
                     </AnimatePresence>
                 </div>
 

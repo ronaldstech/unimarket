@@ -10,6 +10,9 @@ import Orders from './pages/Orders';
 import PaymentCallback from './pages/PaymentCallback';
 import ProductDetail from './pages/ProductDetail';
 import Users from './pages/admin/Users';
+import Redemptions from './pages/admin/Redemptions';
+import Categories from './pages/admin/Categories';
+import Products from './pages/admin/Products';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -45,6 +48,9 @@ function App() {
                   <Route path="/callback" element={<PaymentCallback />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/admin/users" element={<Users />} />
+                  <Route path="/admin/redemptions" element={<Redemptions />} />
+                  <Route path="/admin/categories" element={<Categories />} />
+                  <Route path="/admin/products" element={<Products />} />
                 </Routes>
               </Layout>
             </Router>

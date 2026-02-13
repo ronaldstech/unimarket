@@ -5,6 +5,7 @@ import { SlidersHorizontal, Link, Search, ChevronDown, TrendingUp, Zap, Clock, X
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
+import { useNewArrivals } from '../hooks/useNewArrivals';
 import { useCategories } from '../hooks/useCategories';
 
 const HorizontalSection = ({ title, icon: Icon, products }) => {
@@ -49,6 +50,7 @@ export default function Browse() {
     const [selectedCategory, setSelectedCategory] = useState(urlCategory);
     const [sortOrder, setSortOrder] = useState("Featured");
     const { products, loading, loadingMore, error, hasMore, loadMore } = useProducts(selectedCategory);
+    const { products: fetchedNewArrivals, loading: loadingNewArrivals } = useNewArrivals(6);
     const { categories: dynamicCategories } = useCategories();
     const [searchQuery, setSearchQuery] = useState("");
     const [priceRange, setPriceRange] = useState(100000);
@@ -100,7 +102,8 @@ export default function Browse() {
                 result.sort((a, b) => b.price - a.price);
                 break;
             case "Newest Arrivals":
-                result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+                result = result.filter(p => p.createdAt);
+                result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 break;
             default:
                 break;
@@ -111,7 +114,7 @@ export default function Browse() {
 
     const mostSelling = useMemo(() => products.slice(0, 6), [products]);
     const promotions = useMemo(() => products.filter(p => p.discount).slice(0, 6), [products]);
-    const newArrivals = useMemo(() => products.filter(p => p.isNew).slice(0, 6), [products]);
+    const newArrivals = useMemo(() => fetchedNewArrivals, [fetchedNewArrivals]);
 
     const categories = ["All", ...dynamicCategories.map(c => c.name).filter(n => n !== "All")];
 
