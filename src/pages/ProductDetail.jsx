@@ -90,19 +90,74 @@ export default function ProductDetail() {
     const shareUrl = `${window.location.origin}/product/${id}${user?.myReferralCode ? `?ref=${user.myReferralCode}` : ''}`;
     const shareText = `Check out this ${product?.name} on UniMarket! MWK ${Number(product?.price).toLocaleString()}`;
 
-    const handleCopyLink = () => {
-        navigator.clipboard.writeText(shareUrl);
-        setCopied(true);
-        toast.success('Link copied!');
-        setTimeout(() => setCopied(false), 2000);
+    const handleCopyLink = async () => {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(shareUrl);
+            } else {
+                // Fallback for non-secure contexts
+                const textArea = document.createElement("textarea");
+                textArea.value = shareUrl;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+            }
+            setCopied(true);
+            toast.success('Link copied!');
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Copy failed:', err);
+            toast.error('Failed to copy link');
+        }
     };
 
     const handleShare = async () => {
+        const title = 'UniMarket';
+        const text = shareText;
+        const url = shareUrl;
+
         if (navigator.share) {
             try {
-                await navigator.share({ title: 'UniMarket', text: shareText, url: shareUrl });
+                // When sharing a file, some apps (like WhatsApp) work better 
+                // if the URL is part of the text rather than a separate field.
+                const shareData = {
+                    title,
+                    text: `${text}\n\nLink: ${url}`
+                };
+
+                if (product?.images?.[selectedImage]) {
+                    try {
+                        const response = await fetch(product.images[selectedImage], { mode: 'cors' });
+                        const blob = await response.blob();
+                        // Use a very simple filename
+                        const file = new File([blob], `product.jpg`, { type: 'image/jpeg' });
+
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            shareData.files = [file];
+                            // If we have files, we MUST NOT have a url field for some apps to work
+                        } else {
+                            // If file sharing is not supported, add the url back
+                            shareData.url = url;
+                        }
+                    } catch (imageError) {
+                        console.log('Image fetch for share failed:', imageError);
+                        shareData.url = url;
+                    }
+                } else {
+                    shareData.url = url;
+                }
+
+                await navigator.share(shareData);
             } catch (err) {
-                console.log(err);
+                if (err.name !== 'AbortError') {
+                    console.error('Share failed:', err);
+                    handleCopyLink();
+                }
             }
         } else {
             handleCopyLink();
@@ -403,7 +458,7 @@ export default function ProductDetail() {
                                             >
                                                 <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
                                                 <ShoppingBag size={18} />
-                                                Add to Collection
+                                                Add to Cart
                                             </motion.button>
                                             <motion.button
                                                 whileHover={{ scale: 1.05 }}

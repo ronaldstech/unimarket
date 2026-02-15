@@ -158,7 +158,7 @@ export default function AuthForm() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="w-full bg-muted border border-transparent rounded-2xl py-4 px-6 pl-12 focus:bg-card focus:border-border transition-all font-bold text-sm text-foreground"
-                                    placeholder="user@unimarket.com"
+                                    placeholder="your email address"
                                 />
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/20" size={18} />
                             </div>

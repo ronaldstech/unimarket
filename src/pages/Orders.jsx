@@ -275,9 +275,20 @@ export default function Orders() {
                                                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">Registry ID:</span>
                                                     <span className="text-[10px] font-black tracking-widest uppercase truncate max-w-[100px] md:max-w-none">{order.id}</span>
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-muted-foreground/60">
-                                                    <Clock size={10} />
-                                                    <span className="text-[9px] font-bold uppercase tracking-wider">{formatDate(order.createdAt)}</span>
+                                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                                    <div className="flex items-center gap-1.5 text-muted-foreground/60">
+                                                        <Clock size={10} />
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider">{formatDate(order.createdAt)}</span>
+                                                    </div>
+                                                    {user?.role === 'admin' && order.user && (
+                                                        <div className="flex items-center gap-2 pl-4 border-l border-border/20">
+                                                            <div className="flex items-center gap-1.5 text-primary">
+                                                                <span className="text-[9px] font-black uppercase tracking-widest">{order.user.firstname} {order.user.lastname}</span>
+                                                            </div>
+                                                            <span className="text-[9px] text-muted-foreground/40">•</span>
+                                                            <span className="text-[9px] font-medium text-muted-foreground/60">{order.user.phone || order.user.email}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
